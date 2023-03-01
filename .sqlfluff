@@ -1,0 +1,12 @@
+[sqlfluff]
+dialect = mysql
+sql_file_exts = .sql
+
+[sqlfluff:rules]
+tab_space_size = 4
+max_line_length = 100
+indent_unit = space
+allow_scalar = True
+
+[sqlfluff:rules:L010]
+capitalisation_policy = upper
