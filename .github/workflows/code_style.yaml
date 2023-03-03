@@ -25,7 +25,22 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
-  Lint:
+  Lint_Csharp:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3.3.0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3.0.3
+      with:
+        dotnet-version: 7.0.x
+
+    - name: Install Roslynator analyzer
+      run: dotnet tool install -g roslynator.dotnet.cli
+
+    - name: Run Roslynator analyzer
+      run: roslynator analyze -v detailed
+
+  Lint_SQL:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the project
