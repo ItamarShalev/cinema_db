@@ -24,15 +24,14 @@ CREATE TABLE IF NOT EXISTS product
     CHECK (price > 0)
 );
 
--- duration in minutes
 CREATE TABLE IF NOT EXISTS movie
 (
-    id         INT         NOT NULL AUTO_INCREMENT,
-    movie_name VARCHAR(50) NOT NULL,
-    rating     VARCHAR(50) NOT NULL,
-    duration   INT         NOT NULL,
+    id                  INT         NOT NULL AUTO_INCREMENT,
+    movie_name          VARCHAR(50) NOT NULL,
+    rating              VARCHAR(50) NOT NULL,
+    duration_in_minutes INT         NOT NULL,
     PRIMARY KEY (id),
-    CHECK (duration > 0 AND rating IN ('G', 'PG', 'PG-13', 'R'))
+    CHECK (duration_in_minutes > 0 AND rating IN ('G', 'PG', 'PG-13', 'R'))
 );
 
 CREATE TABLE IF NOT EXISTS theater
