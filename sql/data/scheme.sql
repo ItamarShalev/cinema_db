@@ -103,10 +103,12 @@ CREATE TABLE IF NOT EXISTS screen
 
 CREATE TABLE IF NOT EXISTS sell
 (
-    employee_id INT      NOT NULL,
-    customer_id INT      NOT NULL,
-    product_id  INT      NOT NULL,
-    sell_time   DATETIME NOT NULL,
+    employee_id        INT      NOT NULL,
+    customer_id        INT      NOT NULL,
+    product_id         INT      NOT NULL,
+    ticket_screen_id   INT      NULL,
+    ticket_seat_number INT      NULL,
+    sell_time          DATETIME NOT NULL,
     UNIQUE (employee_id, customer_id, product_id, sell_time),
     PRIMARY KEY (employee_id, customer_id, product_id, sell_time),
     INDEX idx_fk_sell_employee (employee_id),
@@ -123,6 +125,11 @@ CREATE TABLE IF NOT EXISTS sell
         ON UPDATE CASCADE,
     INDEX idx_fk_sell_screen (sell_time),
     CONSTRAINT fk_sell_screen FOREIGN KEY (sell_time) REFERENCES screen (screen_time)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE,
+    INDEX idx_fk_sell_ticket (ticket_screen_id, ticket_seat_number),
+    CONSTRAINT fk_sell_ticket FOREIGN KEY (ticket_screen_id, ticket_seat_number)
+        REFERENCES ticket (screen_id, seat_number)
         ON DELETE NO ACTION
         ON UPDATE CASCADE
 );
