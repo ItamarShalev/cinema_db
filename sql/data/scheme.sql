@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS sell
 
 CREATE TABLE IF NOT EXISTS ticket
 (
-    id          INT      NOT NULL UNIQUE,
+    id          INT      NOT NULL,
     seat_number INT      NOT NULL,
     screen_time DATETIME NOT NULL,
     room_number INT      NOT NULL,
