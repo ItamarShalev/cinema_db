@@ -1,7 +1,3 @@
--- L039: Ignore one space before identifier to make it easier to read
--- L003: Ignore consist of only spaces to make it easier to read the on delete and update
--- noqa: disable=L039,L003
-
 CREATE DATABASE IF NOT EXISTS db_cinema;
 
 USE db_cinema;
