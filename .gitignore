@@ -6,6 +6,8 @@
 # Visual Studio Test Result
 TestResults/
 
+# Secret MySql data
+secret_mysql_login.txt
 
 # C# project
 
