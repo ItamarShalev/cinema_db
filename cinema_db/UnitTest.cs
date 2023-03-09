@@ -1,14 +1,91 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace cinema_db
+namespace cinemaDB
 {
     [TestClass]
-    public class UnitTest
+    public class UnitTest: IDisposable
     {
-        [TestMethod]
-        public void TestUnitTest()
+        private SqlHelper sqlHelper;
+
+        public UnitTest() {
+            sqlHelper = new SqlHelper();
+        } 
+
+        [TestInitialize]
+        public void SetUp()
         {
-           Assert.AreEqual(1, 1);
+            string connectionString = "";
+
+            /* Read the server details using Github secrets */
+            string fullSecretFileLocation = FileFinder.FindFile(FileFinder.FindSlnDirectoryLocation(), "secret_mysql_login.txt");
+            using (var streamReader = File.OpenText(fullSecretFileLocation))
+            {
+                string[] lines = streamReader.ReadToEnd().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                Assert.IsNotNull(lines);
+                Assert.AreEqual(lines.Length, 3);
+                connectionString = SqlHelper.GetMySqlConnectionString(host: lines[0], username: lines[1], password: lines[2]);
+            }
+
+            sqlHelper.OpenDatabaseConnection(connectionString);
+            var reader = sqlHelper.ExecuteSqlCode("DROP DATABASE IF EXISTS db_cinema;");
+            reader.Close();
+            sqlHelper.ExecuteSqlFile("scheme.sql");
+        }
+
+        [TestCleanup]
+        public void TearDown()
+        {
+            sqlHelper.CloseDatabaseConnection();
+        }
+
+        private void RunTest(string fileName, string procedureName)
+        {
+            sqlHelper.ExecuteSqlFile(fileName);
+            bool result = sqlHelper.ExecuteProcedureTest(procedureName);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void TestCheckConnection()
+        {
+            var reader = sqlHelper.ExecuteSqlCode("SELECT 1;");
+            if (reader != null)
+            {
+                reader.Close();
+            }
+            Assert.IsNotNull(reader);
+        }
+
+        [TestMethod]
+        public void TestExampleScalarProcedure()
+        {
+            RunTest("example_test_procedures.sql", "test_example_scalar_procedure");
+        }
+
+        [TestMethod]
+        public void TestExampleListProcedure()
+        {
+            RunTest("example_test_procedures.sql", "test_example_list_procedure");
+        }
+
+        [TestMethod]
+        public void TestExampleMultiProcedure()
+        {
+            RunTest("example_test_procedures.sql", "test_example_multi_procedure");
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                sqlHelper.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
