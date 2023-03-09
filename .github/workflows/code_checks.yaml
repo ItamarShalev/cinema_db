@@ -22,6 +22,9 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
 
+    - name: Write secret MySQL login details to file
+      run: echo ${{ secrets.MYSQL_LOGIN_DETAILS }} >> secret_mysql_login.txt
+
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
