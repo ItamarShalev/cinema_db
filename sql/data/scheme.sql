@@ -2,16 +2,6 @@ CREATE DATABASE IF NOT EXISTS db_cinema;
 
 USE db_cinema;
 
-CREATE TABLE IF NOT EXISTS employee
-(
-    id            INT         NOT NULL AUTO_INCREMENT,
-    first_name    VARCHAR(50) NOT NULL,
-    last_name     VARCHAR(50) NOT NULL,
-    date_of_birth DATE        NOT NULL,
-    UNIQUE (first_name, last_name, date_of_birth),
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE IF NOT EXISTS product
 (
     id           INT         NOT NULL AUTO_INCREMENT,
@@ -53,6 +43,8 @@ CREATE TABLE IF NOT EXISTS customer
     PRIMARY KEY (id)
 );
 
+SET FOREIGN_KEY_CHECKS = 0;
+
 CREATE TABLE IF NOT EXISTS department
 (
     id              INT          NOT NULL AUTO_INCREMENT,
@@ -65,6 +57,23 @@ CREATE TABLE IF NOT EXISTS department
         ON DELETE NO ACTION
         ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS employee
+(
+    id            INT         NOT NULL AUTO_INCREMENT,
+    first_name    VARCHAR(50) NOT NULL,
+    last_name     VARCHAR(50) NOT NULL,
+    date_of_birth DATE        NOT NULL,
+    department_id    INT         NOT NULL,
+    UNIQUE (first_name, last_name, date_of_birth),
+    PRIMARY KEY (id),
+    INDEX idx_fk_department_employee (department_id),
+    CONSTRAINT fk_department_employee FOREIGN KEY (department_id) REFERENCES department (id)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+);
+
+SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE IF NOT EXISTS food
 (
