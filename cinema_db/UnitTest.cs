@@ -30,6 +30,7 @@ namespace cinemaDB
             var reader = sqlHelper.ExecuteSqlCode("DROP DATABASE IF EXISTS db_cinema;");
             reader.Close();
             sqlHelper.ExecuteSqlFile("scheme.sql");
+            sqlHelper.ExecuteSqlFile("data.sql");
         }
 
         [TestCleanup]
