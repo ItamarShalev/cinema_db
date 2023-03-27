@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS employee
     first_name    VARCHAR(50) NOT NULL,
     last_name     VARCHAR(50) NOT NULL,
     date_of_birth DATE        NOT NULL,
+    department    INT         NOT NULL,
     UNIQUE (first_name, last_name, date_of_birth),
     PRIMARY KEY (id)
 );
