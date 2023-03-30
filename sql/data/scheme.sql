@@ -148,10 +148,6 @@ CREATE TABLE IF NOT EXISTS sell
     CONSTRAINT fk_sell_product FOREIGN KEY (product_id) REFERENCES product (id)
         ON DELETE NO ACTION
         ON UPDATE CASCADE,
-    INDEX idx_fk_sell_screen (sell_time),
-    CONSTRAINT fk_sell_screen FOREIGN KEY (sell_time) REFERENCES screen (screen_time)
-        ON DELETE NO ACTION
-        ON UPDATE CASCADE,
     INDEX idx_fk_sell_ticket (ticket_screen_id, ticket_seat_number),
     CONSTRAINT fk_sell_ticket FOREIGN KEY (ticket_screen_id, ticket_seat_number)
         REFERENCES ticket (screen_id, seat_number)
