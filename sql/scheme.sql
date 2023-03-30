@@ -110,15 +110,15 @@ CREATE TABLE IF NOT EXISTS screen
 
 CREATE TABLE IF NOT EXISTS ticket
 (
-    id          INT      NOT NULL,
+    id          INT      NOT NULL AUTO_INCREMENT,
+    product_id  INT      NOT NULL,
     seat_number INT      NOT NULL,
     screen_time DATETIME NOT NULL,
     room_number INT      NOT NULL,
-    screen_id   INT      NOT NULL,
-    UNIQUE (seat_number, screen_time, room_number, screen_id),
-    PRIMARY KEY (screen_id, seat_number),
+    UNIQUE (seat_number, screen_time, room_number),
+    PRIMARY KEY (id),
     INDEX idx_fk_ticket (id),
-    CONSTRAINT fk_ticket FOREIGN KEY (id) REFERENCES product (id)
+    CONSTRAINT fk_ticket FOREIGN KEY (product_id) REFERENCES product (id)
         ON DELETE NO ACTION
         ON UPDATE CASCADE,
     INDEX idx_fk_ticket_screen (screen_time, room_number),
@@ -133,8 +133,7 @@ CREATE TABLE IF NOT EXISTS sell
     employee_id        INT      NOT NULL,
     customer_id        INT      NOT NULL,
     product_id         INT      NOT NULL,
-    ticket_screen_id   INT      NULL,
-    ticket_seat_number INT      NULL,
+    ticket_id          INT      UNIQUE,
     sell_time          DATETIME NOT NULL,
     UNIQUE (employee_id, customer_id, product_id, sell_time),
     PRIMARY KEY (employee_id, customer_id, product_id, sell_time),
@@ -150,9 +149,8 @@ CREATE TABLE IF NOT EXISTS sell
     CONSTRAINT fk_sell_product FOREIGN KEY (product_id) REFERENCES product (id)
         ON DELETE NO ACTION
         ON UPDATE CASCADE,
-    INDEX idx_fk_sell_ticket (ticket_screen_id, ticket_seat_number),
-    CONSTRAINT fk_sell_ticket FOREIGN KEY (ticket_screen_id, ticket_seat_number)
-        REFERENCES ticket (screen_id, seat_number)
+    INDEX idx_fk_sell_ticket (ticket_id),
+    CONSTRAINT fk_sell_ticket FOREIGN KEY (ticket_id) REFERENCES ticket (id)
         ON DELETE NO ACTION
         ON UPDATE CASCADE
 );
