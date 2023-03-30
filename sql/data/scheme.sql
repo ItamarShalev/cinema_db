@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS department
 (
     id              INT          NOT NULL AUTO_INCREMENT,
     department_name VARCHAR(100) NOT NULL UNIQUE,
-    manager_id      INT          NOT NULL,
+    manager_id      INT,
     UNIQUE (department_name, manager_id),
     PRIMARY KEY (id),
     INDEX idx_fk_department (manager_id),
