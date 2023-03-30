@@ -1,40 +1,27 @@
 USE db_cinema;
 
--- Employee insertion of data, 30 new employees.
-INSERT IGNORE INTO employee (first_name, last_name, date_of_birth, department_id)
-VALUES ('John', 'Doe', '1990-01-01', 2),
-       ('Jane', 'Doe', '1992-05-12', 2),
-       ('Bob', 'Smith', '1988-09-25', 1),
-       ('Alice', 'Johnson', '1994-03-17', 3),
-       ('Michael', 'Brown', '1991-11-07', 4),
-       ('Emily', 'Wilson', '1989-06-22', 5),
-       ('David', 'Jones', '1995-02-14', 1),
-       ('Rachel', 'Taylor', '1993-08-03', 1),
-       ('Steven', 'Lee', '1990-12-11', 2),
-       ('Melissa', 'Garcia', '1987-04-29', 3),
-       ('Eric', 'Wang', '1992-10-08', 1),
-       ('Grace', 'Kim', '1988-02-19', 4),
-       ('Kevin', 'Nguyen', '1991-07-09', 2),
-       ('Jessica', 'Chen', '1993-01-23', 3),
-       ('Brian', 'Gonzalez', '1994-05-06', 1),
-       ('Karen', 'Rodriguez', '1989-09-15', 4),
-       ('Andrew', 'Lopez', '1990-03-28', 2),
-       ('Samantha', 'Martinez', '1992-11-20', 3),
-       ('Christopher', 'Perez', '1988-06-05', 1),
-       ('Amanda', 'Sanchez', '1995-01-11', 4),
-       ('Ryan', 'Rivera', '1993-07-02', 2),
-       ('Michelle', 'Ng', '1991-12-26', 3),
-       ('Thomas', 'Tran', '1987-05-13', 1),
-       ('Stephanie', 'Gomez', '1994-02-03', 4),
-       ('Daniel', 'Reyes', '1992-08-17', 2),
-       ('Lauren', 'Hernandez', '1989-12-09', 3),
-       ('Nicholas', 'Kim', '1990-04-27', 1),
-       ('Taylor', 'Lee', '1993-10-18', 4),
-       ('Ashley', 'Choi', '1991-03-07', 2),
-       ('William', 'Park', '1988-09-01', 3);
+-- Product insertion of data, in two parts, first one is for food.
+INSERT INTO product (product_name, price)
+VALUES ('Small Popcorn', 30),
+       ('Medium Popcorn', 45),
+       ('Large Popcorn', 60),
+       ('Small Soda', 20),
+       ('Medium Soda', 30),
+       ('Large Soda', 40),
+       ('Hot Dog', 35),
+       ('Nachos', 40),
+       ('Candy', 25),
+       ('Ice Cream', 35),
+       ('Pretzel', 30),
+       ('Pizza Slice', 50),
+       ('Chicken Tenders', 60),
+       ('Fries', 35),
+       ('Onion Rings', 40),
+       ('Movie Ticket', 30),
+       ('VIP Movie Ticket', 45);
 
 -- Movies insertion of data, using real movies name and duration.
-INSERT IGNORE INTO movie (movie_name, rating, duration_in_minutes)
+INSERT INTO movie (movie_name, rating, duration_in_minutes)
 VALUES ('The Shawshank Redemption', 'R', 142),
        ('The Godfather', 'R', 175),
        ('The Dark Knight', 'PG-13', 152),
@@ -67,7 +54,7 @@ VALUES ('The Shawshank Redemption', 'R', 142),
        ('Eternal Sunshine of the Spotless Mind', 'R', 108);
 
 -- Theater insertion of data, we got 10 theater rooms.
-INSERT IGNORE INTO theater (room_number, is_3d, seats, is_vip)
+INSERT INTO theater (room_number, is_3d, seats, is_vip)
 VALUES (1, 1, 100, 0),
        (2, 0, 75, 0),
        (3, 1, 120, 1),
@@ -80,7 +67,7 @@ VALUES (1, 1, 100, 0),
        (10, 0, 100, 1);
 
 -- Customers insertion of data, we use 47 different customers.
-INSERT IGNORE INTO customer (customer_name, date_of_birth)
+INSERT INTO customer (customer_name, date_of_birth)
 VALUES ('John Smith', '1995-03-21'),
        ('Sarah Johnson', '1988-06-12'),
        ('David Brown', '1999-09-01'),
@@ -130,35 +117,64 @@ VALUES ('John Smith', '1995-03-21'),
        ('Benjamin Powell', '2000-03-12');
 
 -- Department insertion of data, we use 5 different departments.
-INSERT IGNORE INTO department (department_name, manager_id)
-VALUES ('Ticket Sales', 8),
-       ('Returns', 2),
-       ('Usher', 3),
-       ('Food Sales', 4),
-       ('Customer Service', 5);
+INSERT INTO department (department_name, manager_id)
+VALUES ('Ticket Sales', NULL),
+       ('Returns', NULL),
+       ('Usher', NULL),
+       ('Food Sales', NULL),
+       ('Customer Service', NULL);
 
--- Product insertion of data, in two parts, first one is for food.
-INSERT IGNORE INTO product (product_name, price)
-VALUES ('Small Popcorn', 30),
-       ('Medium Popcorn', 45),
-       ('Large Popcorn', 60),
-       ('Small Soda', 20),
-       ('Medium Soda', 30),
-       ('Large Soda', 40),
-       ('Hot Dog', 35),
-       ('Nachos', 40),
-       ('Candy', 25),
-       ('Ice Cream', 35),
-       ('Pretzel', 30),
-       ('Pizza Slice', 50),
-       ('Chicken Tenders', 60),
-       ('Fries', 35),
-       ('Onion Rings', 40),
-       ('Movie Ticket', 30),
-       ('VIP Movie Ticket', 45);
+-- Employee insertion of data, 30 new employees.
+INSERT INTO employee (first_name, last_name, date_of_birth, department_id)
+VALUES ('John', 'Doe', '1990-01-01', 2),
+       ('Jane', 'Doe', '1992-05-12', 2),
+       ('Bob', 'Smith', '1988-09-25', 1),
+       ('Alice', 'Johnson', '1994-03-17', 3),
+       ('Michael', 'Brown', '1991-11-07', 4),
+       ('Emily', 'Wilson', '1989-06-22', 5),
+       ('David', 'Jones', '1995-02-14', 1),
+       ('Rachel', 'Taylor', '1993-08-03', 1),
+       ('Steven', 'Lee', '1990-12-11', 2),
+       ('Melissa', 'Garcia', '1987-04-29', 3),
+       ('Eric', 'Wang', '1992-10-08', 1),
+       ('Grace', 'Kim', '1988-02-19', 4),
+       ('Kevin', 'Nguyen', '1991-07-09', 2),
+       ('Jessica', 'Chen', '1993-01-23', 3),
+       ('Brian', 'Gonzalez', '1994-05-06', 1),
+       ('Karen', 'Rodriguez', '1989-09-15', 4),
+       ('Andrew', 'Lopez', '1990-03-28', 2),
+       ('Samantha', 'Martinez', '1992-11-20', 3),
+       ('Christopher', 'Perez', '1988-06-05', 1),
+       ('Amanda', 'Sanchez', '1995-01-11', 4),
+       ('Ryan', 'Rivera', '1993-07-02', 2),
+       ('Michelle', 'Ng', '1991-12-26', 3),
+       ('Thomas', 'Tran', '1987-05-13', 1),
+       ('Stephanie', 'Gomez', '1994-02-03', 4),
+       ('Daniel', 'Reyes', '1992-08-17', 2),
+       ('Lauren', 'Hernandez', '1989-12-09', 3),
+       ('Nicholas', 'Kim', '1990-04-27', 1),
+       ('Taylor', 'Lee', '1993-10-18', 4),
+       ('Ashley', 'Choi', '1991-03-07', 2),
+       ('William', 'Park', '1988-09-01', 3);
+
+UPDATE department
+SET manager_id = 8
+WHERE department_name = 'Ticket Sales';
+UPDATE department
+SET manager_id = 2
+WHERE department_name = 'Returns';
+UPDATE department
+SET manager_id = 3
+WHERE department_name = 'Usher';
+UPDATE department
+SET manager_id = 4
+WHERE department_name = 'Food Sales';
+UPDATE department
+SET manager_id = 5
+WHERE department_name = 'Customer Service';
 
 -- Food insertion of data respectively to data in product table.
-INSERT IGNORE INTO food (id, need_cooling, allergy, min_age)
+INSERT INTO food (id, need_cooling, allergy, min_age)
 VALUES (1, 0, NULL, 8),
        (2, 0, NULL, 8),
        (3, 0, NULL, 8),
@@ -176,7 +192,7 @@ VALUES (1, 0, NULL, 8),
        (15, 0, NULL, 3);
 
 -- Screen insertion of data, screen each movie once or twice
-INSERT IGNORE INTO screen (screen_time, room_number, movie_id)
+INSERT INTO screen (screen_time, room_number, movie_id)
 VALUES ('2023-03-06 12:00:00', 1, 1),
        ('2023-03-06 15:00:00', 2, 2),
        ('2023-03-06 18:00:00', 3, 3),
@@ -209,7 +225,7 @@ VALUES ('2023-03-06 12:00:00', 1, 1),
        ('2023-03-13 15:00:00', 10, 30);
 
 -- Tickets insertion of data, notice that a theater is not full.
-INSERT IGNORE INTO ticket(id, seat_number, screen_time, room_number, screen_id)
+INSERT INTO ticket(id, seat_number, screen_time, room_number, screen_id)
 VALUES (16, 1, '2023-03-06 12:00:00', 1, 1),
        (16, 2, '2023-03-06 12:00:00', 1, 1),
        (16, 3, '2023-03-06 12:00:00', 1, 1),
@@ -3677,7 +3693,7 @@ VALUES (16, 1, '2023-03-06 12:00:00', 1, 1),
        (17, 100, '2023-03-13 15:00:00', 10, 30);
 
 -- Sells insertion of data.
-INSERT IGNORE INTO sell
+INSERT INTO sell
 VALUES (20, 7, 15, NULL, NULL, '2023-03-29 03:45:40'),
        (5, 19, 5, NULL, NULL, '2023-03-31 01:08:40'),
        (5, 1, 7, NULL, NULL, '2023-03-29 01:50:40'),
