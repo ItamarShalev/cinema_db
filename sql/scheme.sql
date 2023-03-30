@@ -64,8 +64,10 @@ CREATE TABLE IF NOT EXISTS employee
     first_name    VARCHAR(50) NOT NULL,
     last_name     VARCHAR(50) NOT NULL,
     date_of_birth DATE        NOT NULL,
-    department_id    INT         NOT NULL,
+    department_id INT         NOT NULL,
+    still_active  TINYINT     NOT NULL DEFAULT 1,
     UNIQUE (first_name, last_name, date_of_birth),
+    CHECK (still_active IN (0, 1)),
     PRIMARY KEY (id),
     INDEX idx_fk_department_employee (department_id),
     CONSTRAINT fk_department_employee FOREIGN KEY (department_id) REFERENCES department (id)
