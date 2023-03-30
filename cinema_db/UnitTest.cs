@@ -31,6 +31,8 @@ namespace cinemaDB
             reader.Close();
             sqlHelper.ExecuteSqlFile("scheme.sql");
             sqlHelper.ExecuteSqlFile("data.sql");
+            sqlHelper.ExecuteSqlFile("procedures.sql");
+            sqlHelper.ExecuteSqlFile("test_procedures.sql");
         }
 
         [TestCleanup]
@@ -73,6 +75,12 @@ namespace cinemaDB
         public void TestExampleMultiProcedure()
         {
             RunTest("example_test_procedures.sql", "test_example_multi_procedure");
+        }
+
+        [TestMethod]
+        public void TestCountTablesInDatabase()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_count_tables_in_database"));
         }
 
         protected virtual void Dispose(bool disposing)
