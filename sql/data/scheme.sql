@@ -48,7 +48,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE TABLE IF NOT EXISTS department
 (
     id              INT          NOT NULL AUTO_INCREMENT,
-    department_name VARCHAR(100) NOT NULL,
+    department_name VARCHAR(100) NOT NULL UNIQUE,
     manager_id      INT          NOT NULL,
     UNIQUE (department_name, manager_id),
     PRIMARY KEY (id),
