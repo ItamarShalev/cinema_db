@@ -32,6 +32,26 @@ namespace cinemaDB
             }
         }
 
+        public bool ExecuteFunctionTest(string functionName)
+        {
+            bool result = false;
+            string activeFunctionTestName = $"SELECT {functionName}() AS test_result;";
+            var reader = ExecuteSqlCode(activeFunctionTestName);
+            if (reader != null)
+            {
+                if (reader.HasRows && reader.FieldCount > 0 && reader.GetName(0) == "test_result")
+                {
+                    if (reader.Read())
+                    {
+                        int intResult = Convert.ToInt32(reader["test_result"], CultureInfo.CurrentCulture);
+                        result = intResult == 1;
+                    }
+                }
+                reader.Close();
+            }
+            return result;
+        }
+
         public bool ExecuteProcedureTest(string procedureName)
         {
             bool result = false;

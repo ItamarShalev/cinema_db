@@ -41,10 +41,17 @@ namespace cinemaDB
             sqlHelper.CloseDatabaseConnection();
         }
 
-        private void RunTest(string fileName, string procedureName)
+        private void RunExampleProcedureTest(string fileName, string procedureName)
         {
             sqlHelper.ExecuteSqlFile(fileName);
             bool result = sqlHelper.ExecuteProcedureTest(procedureName);
+            Assert.IsTrue(result);
+        }
+
+        private void RunExamplFunctionTest(string fileName, string functionName)
+        {
+            sqlHelper.ExecuteSqlFile(fileName);
+            bool result = sqlHelper.ExecuteFunctionTest(functionName);
             Assert.IsTrue(result);
         }
 
@@ -62,19 +69,37 @@ namespace cinemaDB
         [TestMethod]
         public void TestExampleScalarProcedure()
         {
-            RunTest("example_test_procedures.sql", "test_example_scalar_procedure");
+            RunExampleProcedureTest("example_test_procedures.sql", "test_example_scalar_procedure");
         }
 
         [TestMethod]
         public void TestExampleListProcedure()
         {
-            RunTest("example_test_procedures.sql", "test_example_list_procedure");
+            RunExampleProcedureTest("example_test_procedures.sql", "test_example_list_procedure");
         }
 
         [TestMethod]
         public void TestExampleMultiProcedure()
         {
-            RunTest("example_test_procedures.sql", "test_example_multi_procedure");
+            RunExampleProcedureTest("example_test_procedures.sql", "test_example_multi_procedure");
+        }
+
+        [TestMethod]
+        public void TestExampleScalarFunction()
+        {
+            RunExamplFunctionTest("example_test_functions.sql", "test_example_scalar_function");
+        }
+
+        [TestMethod]
+        public void TestExampleListFunction()
+        {
+            RunExamplFunctionTest("example_test_functions.sql", "test_example_list_function");
+        }
+
+        [TestMethod]
+        public void TestExampleMultiFunction()
+        {
+            RunExamplFunctionTest("example_test_functions.sql", "test_example_multi_function");
         }
 
         [TestMethod]
