@@ -24,3 +24,18 @@ CREATE VIEW view_movies_not_for_adults AS
 
 -- SELECT * FROM view_movies_not_for_adults;
 
+DROP VIEW IF EXISTS view_employee_earn_per_month;
+CREATE VIEW view_employee_earn_per_month AS
+(
+    SELECT
+         employee.id,
+         YEAR(sell_time) as year,
+         MONTH(sell_time) AS month,
+         SUM(price) AS sales
+     FROM sell INNER JOIN product INNER JOIN employee
+     ON sell.product_id = product.id AND sell.employee_id = employee.id
+     GROUP BY YEAR(sell_time), MONTH(sell.sell_time), employee.id
+);
+
+SELECT * FROM view_employee_earn_per_month;
+
