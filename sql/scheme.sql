@@ -55,6 +55,11 @@ CREATE TABLE IF NOT EXISTS department
     INDEX idx_fk_department (manager_id),
     CONSTRAINT fk_department FOREIGN KEY (manager_id) REFERENCES employee (id)
         ON DELETE NO ACTION
+        ON UPDATE CASCADE,
+    INDEX idx_fk_department_manager (manager_id, id),
+    CONSTRAINT fk_department_manager
+        FOREIGN KEY (manager_id, id) REFERENCES employee (id, department_id)
+        ON DELETE NO ACTION
         ON UPDATE CASCADE
 );
 
@@ -69,6 +74,7 @@ CREATE TABLE IF NOT EXISTS employee
     UNIQUE (first_name, last_name, date_of_birth),
     CHECK (still_active IN (0, 1)),
     PRIMARY KEY (id),
+    INDEX idx_fk_department_manager (id, department_id),
     INDEX idx_fk_department_employee (department_id),
     CONSTRAINT fk_department_employee FOREIGN KEY (department_id) REFERENCES department (id)
         ON DELETE NO ACTION
