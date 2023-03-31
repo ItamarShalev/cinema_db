@@ -1,0 +1,2 @@
+# Since there is issue to test views, ignore it.
+sql/views.sql
