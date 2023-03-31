@@ -30,6 +30,7 @@ namespace cinemaDB
             var reader = sqlHelper.ExecuteSqlCode("DROP DATABASE IF EXISTS db_cinema;");
             reader.Close();
             sqlHelper.ExecuteSqlFile("scheme.sql");
+            sqlHelper.ExecuteSqlFile("views.sql");
             sqlHelper.ExecuteSqlFile("data.sql");
             sqlHelper.ExecuteSqlFile("procedures.sql");
             sqlHelper.ExecuteSqlFile("functions.sql");
@@ -108,6 +109,12 @@ namespace cinemaDB
         public void TestCountTablesInDatabase()
         {
             Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_count_tables_in_database"));
+        }
+
+        [TestMethod]
+        public void TestMoviesNotForAdult()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_movies_not_for_adults"));
         }
 
         protected virtual void Dispose(bool disposing)

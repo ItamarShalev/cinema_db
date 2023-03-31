@@ -16,3 +16,23 @@ BEGIN
 END;
 
 -- SELECT test_count_tables_in_database();
+
+DROP FUNCTION IF EXISTS test_movies_not_for_adults;
+CREATE FUNCTION test_movies_not_for_adults()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result TEXT DEFAULT '3,4,5,6,7,11,12,16,20,23,29';
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+
+    SELECT GROUP_CONCAT(id ORDER BY id SEPARATOR ',')
+    INTO actual_result
+    FROM view_movies_not_for_adults;
+
+    SET test_result =  IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;
+
+-- SELECT test_movies_not_for_adults();
