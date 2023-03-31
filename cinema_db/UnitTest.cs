@@ -32,7 +32,9 @@ namespace cinemaDB
             sqlHelper.ExecuteSqlFile("scheme.sql");
             sqlHelper.ExecuteSqlFile("data.sql");
             sqlHelper.ExecuteSqlFile("procedures.sql");
+            sqlHelper.ExecuteSqlFile("functions.sql");
             sqlHelper.ExecuteSqlFile("test_procedures.sql");
+            sqlHelper.ExecuteSqlFile("test_functions.sql");
         }
 
         [TestCleanup]
@@ -105,7 +107,7 @@ namespace cinemaDB
         [TestMethod]
         public void TestCountTablesInDatabase()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_count_tables_in_database"));
+            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_count_tables_in_database"));
         }
 
         protected virtual void Dispose(bool disposing)
