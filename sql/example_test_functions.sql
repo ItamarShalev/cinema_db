@@ -32,24 +32,22 @@ END;
 
 -- SELECT example_scalar_function('test1') AS result;
 
-DROP VIEW IF EXISTS view_example_list;
-CREATE VIEW view_example_list AS
-    (
-        SELECT name_value
-        FROM test_table
-        ORDER BY name_value DESC
-    );
+CREATE OR REPLACE VIEW view_example_list AS
+(
+    SELECT name_value
+    FROM test_table
+    ORDER BY name_value DESC
+);
 
 -- SELECT * FROM view_example_list;
 
-DROP VIEW IF EXISTS view_example_multi;
-CREATE VIEW view_example_multi AS
-    (
-        SELECT id, name_value
-        FROM test_table
-        WHERE id != 2
-        ORDER BY id DESC
-    );
+CREATE OR REPLACE VIEW view_example_multi AS
+(
+    SELECT id, name_value
+    FROM test_table
+    WHERE id != 2
+    ORDER BY id DESC
+);
 
 -- SELECT * FROM view_example_multi;
 

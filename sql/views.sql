@@ -1,7 +1,6 @@
 USE db_cinema;
 
-DROP VIEW IF EXISTS view_employee_with_sold_products_count;
-CREATE VIEW view_employee_with_sold_products_count AS
+CREATE OR REPLACE VIEW view_employee_with_sold_products_count AS
 (
     SELECT
          employee.id,
@@ -14,18 +13,14 @@ CREATE VIEW view_employee_with_sold_products_count AS
 );
 
 -- Return all the movies not for adults
-DROP VIEW IF EXISTS view_movies_not_for_adults;
-CREATE VIEW view_movies_not_for_adults AS
+CREATE OR REPLACE VIEW view_movies_not_for_adults AS
 (
     SELECT id, movie_name
     FROM movie
     WHERE rating != 'R'
 );
 
--- SELECT * FROM view_movies_not_for_adults;
-
-DROP VIEW IF EXISTS view_employee_earn_per_month;
-CREATE VIEW view_employee_earn_per_month AS
+CREATE OR REPLACE VIEW view_employee_earn_per_month AS
 (
     SELECT
          employee.id,
