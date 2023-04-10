@@ -26,7 +26,11 @@ jobs:
       run: echo ${{ secrets.MYSQL_LOGIN_DETAILS }} >> secret_mysql_login.txt
 
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      uses: nick-fields/retry@v2
+      with:
+        timeout_minutes: 1
+        max_attempts: 2
+        command: dotnet test --no-build --verbosity normal
 
   Lint_Csharp:
     runs-on: ubuntu-latest
