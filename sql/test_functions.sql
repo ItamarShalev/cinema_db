@@ -55,4 +55,22 @@ BEGIN
     RETURN test_result;
 END;
 
-SELECT test_employee_earn_per_month();
+-- SELECT test_employee_earn_per_month();
+
+DROP FUNCTION IF EXISTS test_earn_per_month;
+CREATE FUNCTION test_earn_per_month()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result INT DEFAULT 1;
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+
+    SELECT IF(COUNT(*) = 3 AND SUM(sales) = 3650, 1, 0)
+    INTO actual_result
+    FROM view_earn_per_month;
+
+    SET test_result =  IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;

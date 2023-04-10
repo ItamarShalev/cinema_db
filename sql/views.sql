@@ -32,4 +32,9 @@ CREATE OR REPLACE VIEW view_employee_earn_per_month AS
      GROUP BY YEAR(sell.sell_time), MONTH(sell.sell_time), employee.id
 );
 
-SELECT * FROM view_employee_earn_per_month;
+CREATE OR REPLACE VIEW view_earn_per_month AS
+(
+    SELECT at_year, at_month, SUM(sales) AS sales
+    FROM view_employee_earn_per_month
+    GROUP BY at_year, at_month
+);

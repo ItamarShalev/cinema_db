@@ -123,6 +123,12 @@ namespace cinemaDB
             Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_employee_earn_per_month"));
         }
 
+        [TestMethod]
+        public void TestEarnPerMonth()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_earn_per_month"));
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
