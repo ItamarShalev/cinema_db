@@ -56,7 +56,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install packages for python
-        run: python -m pip install sqlfluff==2.0.2
+        run: python -m pip install git+https://git@github.com/sqlfluff/sqlfluff.git@7af2415da679154773e2a95114a2bea9413a3acb
 
       - name: Run sqlfluff linter
-        run: sqlfluff lint -v || true
+        run: sqlfluff lint -v

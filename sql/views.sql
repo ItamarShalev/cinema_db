@@ -29,13 +29,12 @@ CREATE VIEW view_employee_earn_per_month AS
 (
     SELECT
          employee.id,
-         YEAR(sell_time) as year,
-         MONTH(sell_time) AS month,
-         SUM(price) AS sales
+         YEAR(sell.sell_time) AS at_year,
+         MONTH(sell.sell_time) AS at_month,
+         SUM(product.price) AS sales
      FROM sell INNER JOIN product INNER JOIN employee
      ON sell.product_id = product.id AND sell.employee_id = employee.id
-     GROUP BY YEAR(sell_time), MONTH(sell.sell_time), employee.id
+     GROUP BY YEAR(sell.sell_time), MONTH(sell.sell_time), employee.id
 );
 
 SELECT * FROM view_employee_earn_per_month;
-

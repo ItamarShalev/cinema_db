@@ -1,2 +1,2 @@
-# Since there is issue to test views, ignore it.
-sql/views.sql
+# Since this file contains all the insert values and too big, ignore it.
+sql/data.sql
