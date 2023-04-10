@@ -51,7 +51,7 @@ namespace cinemaDB
             Assert.IsTrue(result);
         }
 
-        private void RunExamplFunctionTest(string fileName, string functionName)
+        private void RunExampleFunctionTest(string fileName, string functionName)
         {
             sqlHelper.ExecuteSqlFile(fileName);
             bool result = sqlHelper.ExecuteFunctionTest(functionName);
@@ -90,19 +90,19 @@ namespace cinemaDB
         [TestMethod]
         public void TestExampleScalarFunction()
         {
-            RunExamplFunctionTest("example_test_functions.sql", "test_example_scalar_function");
+            RunExampleFunctionTest("example_test_functions.sql", "test_example_scalar_function");
         }
 
         [TestMethod]
         public void TestExampleListFunction()
         {
-            RunExamplFunctionTest("example_test_functions.sql", "test_example_list_function");
+            RunExampleFunctionTest("example_test_functions.sql", "test_example_list_function");
         }
 
         [TestMethod]
         public void TestExampleMultiFunction()
         {
-            RunExamplFunctionTest("example_test_functions.sql", "test_example_multi_function");
+            RunExampleFunctionTest("example_test_functions.sql", "test_example_multi_function");
         }
 
         [TestMethod]
