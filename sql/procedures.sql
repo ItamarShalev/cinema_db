@@ -95,3 +95,23 @@ BEGIN
 
     SELECT * FROM temporary_table_tickets_sold_in_screen;
 END;
+
+DROP PROCEDURE IF EXISTS get_employee_with_most_products;
+CREATE PROCEDURE get_employee_with_most_products()
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_employee_with_most_products;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_employee_with_most_products
+    (
+        id            INT,
+        first_name    VARCHAR(255),
+        last_name     VARCHAR(255),
+        product_count INT
+    );
+
+    INSERT INTO temporary_table_employee_with_most_products
+    SELECT *
+    FROM view_employee_with_sold_products_count
+    WHERE product_count = (SELECT MAX(product_count) FROM view_employee_with_sold_products_count);
+
+    SELECT * FROM temporary_table_employee_with_most_products;
+END;

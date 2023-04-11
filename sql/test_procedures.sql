@@ -90,3 +90,22 @@ BEGIN
 
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_get_employee_with_most_products;
+CREATE PROCEDURE test_get_employee_with_most_products()
+BEGIN
+    DECLARE expected_result TEXT DEFAULT '5,Michael,Brown,11';
+    DECLARE actual_result TEXT;
+
+    CALL get_employee_with_most_products();
+
+    SELECT GROUP_CONCAT(
+        CONCAT(id, ',', first_name, ',', last_name, ',', product_count)
+        ORDER BY id SEPARATOR '|')
+    INTO actual_result
+    FROM temporary_table_employee_with_most_products;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_employee_with_most_products;
+
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
