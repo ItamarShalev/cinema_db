@@ -109,3 +109,22 @@ BEGIN
 
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_get_employee_earned_most_money;
+CREATE PROCEDURE test_get_employee_earned_most_money()
+BEGIN
+    DECLARE expected_result TEXT DEFAULT '5,Michael,Brown,410';
+    DECLARE actual_result TEXT;
+
+    CALL get_employee_earned_most_money();
+
+    SELECT GROUP_CONCAT(
+        CONCAT(id, ',', first_name, ',', last_name, ',', money)
+        ORDER BY id SEPARATOR '|')
+    INTO actual_result
+    FROM temporary_table_get_employee_earned_most_money;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_get_employee_earned_most_money;
+
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;

@@ -115,3 +115,23 @@ BEGIN
 
     SELECT * FROM temporary_table_employee_with_most_products;
 END;
+
+DROP PROCEDURE IF EXISTS get_employee_earned_most_money;
+CREATE PROCEDURE get_employee_earned_most_money()
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_get_employee_earned_most_money;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_get_employee_earned_most_money
+    (
+        id            INT,
+        first_name    VARCHAR(255),
+        last_name     VARCHAR(255),
+        money INT
+    );
+
+    INSERT INTO temporary_table_get_employee_earned_most_money
+    SELECT *
+    FROM view_employee_with_sales_money
+    WHERE sales = (SELECT MAX(sales) FROM view_employee_with_sales_money);
+
+    SELECT * FROM temporary_table_get_employee_earned_most_money;
+END;
