@@ -147,6 +147,12 @@ namespace cinemaDB
             Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_get_employee_birthday_in_month"));
         }
 
+        [TestMethod]
+        public void TestGetFoodThatNeedCooling()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_get_food_that_need_cooling"));
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

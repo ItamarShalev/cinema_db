@@ -37,3 +37,22 @@ BEGIN
 
     SELECT * FROM temporary_table_employee_birthday_in_month;
 END;
+
+DROP PROCEDURE IF EXISTS get_food_that_need_cooling;
+CREATE PROCEDURE get_food_that_need_cooling()
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_food_that_need_cooling;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_food_that_need_cooling
+    (
+        id        INT,
+        food_name VARCHAR(255)
+    );
+
+    INSERT INTO temporary_table_food_that_need_cooling
+    SELECT product.id, product.product_name AS food_name
+    FROM product
+    NATURAL JOIN food
+    WHERE food.need_cooling = TRUE;
+
+    SELECT * FROM temporary_table_food_that_need_cooling;
+END;

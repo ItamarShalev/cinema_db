@@ -33,3 +33,20 @@ BEGIN
 
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_get_food_that_need_cooling;
+CREATE PROCEDURE test_get_food_that_need_cooling()
+BEGIN
+    DECLARE expected_result TEXT DEFAULT '10,Ice Cream';
+    DECLARE actual_result TEXT;
+
+    CALL get_food_that_need_cooling();
+
+    SELECT GROUP_CONCAT(CONCAT(id, ',', food_name) ORDER BY id SEPARATOR '|')
+    INTO actual_result
+    FROM temporary_table_food_that_need_cooling;
+
+    DROP TEMPORARY TABLE IF EXISTS table_example_multi_procedure;
+
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
