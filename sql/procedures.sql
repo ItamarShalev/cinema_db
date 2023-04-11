@@ -76,3 +76,22 @@ BEGIN
 
     SELECT * FROM temporary_table_movies_screen_in_theater;
 END;
+
+DROP PROCEDURE IF EXISTS get_tickets_sold_in_screen;
+CREATE PROCEDURE get_tickets_sold_in_screen(IN param_screen_time DATETIME, IN param_room_number INT)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_tickets_sold_in_screen;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_tickets_sold_in_screen
+    (
+        seat_number INT
+    );
+
+    INSERT INTO temporary_table_tickets_sold_in_screen
+    SELECT ticket.seat_number
+    FROM ticket INNER JOIN sell
+    ON ticket.id = sell.ticket_id
+    WHERE ticket.screen_time = param_screen_time
+    AND ticket.room_number = param_room_number;
+
+    SELECT * FROM temporary_table_tickets_sold_in_screen;
+END;

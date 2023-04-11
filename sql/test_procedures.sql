@@ -67,3 +67,26 @@ BEGIN
 
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_get_tickets_sold_in_screen;
+CREATE PROCEDURE test_get_tickets_sold_in_screen()
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+
+    SET expected_result = CONCAT(
+            '1,2,3,4,5,6,7,8,9,10,20,21,22,23,24,25,26,27,28,29,30,',
+            '41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,',
+            '71,72,73,74,75,76,77,78'
+        );
+
+    CALL get_tickets_sold_in_screen('2023-03-06 12:00:00', 1);
+
+    SELECT GROUP_CONCAT(seat_number ORDER BY seat_number SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_tickets_sold_in_screen;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_tickets_sold_in_screen;
+
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
