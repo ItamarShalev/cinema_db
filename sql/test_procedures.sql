@@ -29,7 +29,7 @@ BEGIN
     INTO actual_result
     FROM (SELECT * FROM temporary_table_employee_birthday_in_month ORDER BY id) AS employees;
 
-    DROP TEMPORARY TABLE IF EXISTS table_example_multi_procedure;
+    DROP TEMPORARY TABLE IF EXISTS test_get_employee_birthday_in_month;
 
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
@@ -46,7 +46,24 @@ BEGIN
     INTO actual_result
     FROM temporary_table_food_that_need_cooling;
 
-    DROP TEMPORARY TABLE IF EXISTS table_example_multi_procedure;
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_food_that_need_cooling;
+
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
+
+DROP PROCEDURE IF EXISTS test_get_movies_screen_in_theater;
+CREATE PROCEDURE test_get_movies_screen_in_theater()
+BEGIN
+    DECLARE expected_result TEXT DEFAULT '4,Forrest Gump|14,Goodfellas|24,The Green Mile';
+    DECLARE actual_result TEXT;
+
+    CALL get_movies_screen_in_theater(4);
+
+    SELECT GROUP_CONCAT(CONCAT(id, ',', movie_name) ORDER BY id SEPARATOR '|')
+    INTO actual_result
+    FROM temporary_table_movies_screen_in_theater;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_screen_in_theater;
 
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;

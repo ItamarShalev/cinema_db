@@ -56,3 +56,23 @@ BEGIN
 
     SELECT * FROM temporary_table_food_that_need_cooling;
 END;
+
+DROP PROCEDURE IF EXISTS get_movies_screen_in_theater;
+CREATE PROCEDURE get_movies_screen_in_theater(IN param_room_number INT)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_screen_in_theater;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_movies_screen_in_theater
+    (
+        id         INT,
+        movie_name VARCHAR(255)
+    );
+
+    INSERT INTO temporary_table_movies_screen_in_theater
+    SELECT movie.id, movie.movie_name
+    FROM movie
+    INNER JOIN screen
+    ON movie.id = screen.movie_id
+    WHERE screen.room_number = param_room_number;
+
+    SELECT * FROM temporary_table_movies_screen_in_theater;
+END;
