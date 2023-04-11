@@ -18,3 +18,22 @@ BEGIN
 
     SELECT * FROM temporary_table_products_under_price;
 END;
+
+DROP PROCEDURE IF EXISTS get_employee_birthday_in_month;
+CREATE PROCEDURE get_employee_birthday_in_month(IN param_month INT)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_employee_birthday_in_month;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_employee_birthday_in_month
+    (
+        id            INT,
+        employee_name VARCHAR(255),
+        date_of_birth DATE
+    );
+
+    INSERT INTO temporary_table_employee_birthday_in_month
+    SELECT id, CONCAT(first_name, ' ', last_name) AS full_name, date_of_birth
+    FROM employee
+    WHERE MONTH(date_of_birth) = param_month;
+
+    SELECT * FROM temporary_table_employee_birthday_in_month;
+END;
