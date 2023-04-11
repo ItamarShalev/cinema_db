@@ -38,3 +38,25 @@ CREATE OR REPLACE VIEW view_earn_per_month AS
     FROM view_employee_earn_per_month
     GROUP BY at_year, at_month
 );
+
+CREATE OR REPLACE VIEW view_employee_with_sales_money AS
+(
+    SELECT
+         employee.id,
+         employee.first_name,
+         employee.last_name,
+         SUM(product.price) AS sales
+    FROM employee
+    INNER JOIN sell ON employee.id = sell.employee_id
+    INNER JOIN product ON sell.product_id = product.id
+    GROUP BY employee.id
+    UNION DISTINCT
+    SELECT
+        employee.id AS id,
+        employee.first_name,
+        employee.last_name,
+        0 AS sales
+    FROM employee
+    LEFT JOIN sell ON employee.id = sell.employee_id
+    WHERE sell.employee_id IS NULL
+);

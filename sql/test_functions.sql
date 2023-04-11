@@ -74,3 +74,29 @@ BEGIN
 
     RETURN test_result;
 END;
+
+DROP FUNCTION IF EXISTS test_employee_with_sales_money;
+CREATE FUNCTION test_employee_with_sales_money()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result TEXT DEFAULT '5,410|3,375|12,370|19,360';
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+    DECLARE has_zeros_sales INT DEFAULT 0;
+
+    SELECT GROUP_CONCAT(CONCAT(id, ',', sales) SEPARATOR '|')
+    INTO actual_result
+    FROM (SELECT id, sales
+          FROM view_employee_with_sales_money
+          ORDER BY sales DESC
+          LIMIT 4) AS employees;
+
+    SET has_zeros_sales = IF(0 IN (SELECT sales FROM view_employee_with_sales_money), 1, 0);
+
+    SET test_result =  IF(has_zeros_sales = 0
+                          OR actual_result != expected_result
+                          OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;
