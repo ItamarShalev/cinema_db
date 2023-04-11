@@ -37,7 +37,7 @@ DROP PROCEDURE IF EXISTS example_list_procedure;
 CREATE PROCEDURE example_list_procedure()
 BEGIN
 
-    DROP TABLE IF EXISTS table_example_list_procedure;
+    DROP TEMPORARY TABLE IF EXISTS table_example_list_procedure;
     CREATE TEMPORARY TABLE IF NOT EXISTS table_example_list_procedure
     (
         name_value VARCHAR(255)
@@ -53,7 +53,7 @@ END;
 DROP PROCEDURE IF EXISTS example_multi_procedure;
 CREATE PROCEDURE example_multi_procedure()
 BEGIN
-    DROP TABLE IF EXISTS table_example_multi_procedure;
+    DROP TEMPORARY TABLE IF EXISTS table_example_multi_procedure;
     CREATE TEMPORARY TABLE IF NOT EXISTS table_example_multi_procedure
     (
         id         INT,
@@ -99,7 +99,7 @@ BEGIN
     FROM table_example_list_procedure;
 
     -- Drop the temporary table
-    DROP TABLE IF EXISTS table_example_list_procedure;
+    DROP TEMPORARY TABLE IF EXISTS table_example_list_procedure;
 
     -- Compare the expected and actual results and return 1 if they match, 0 otherwise
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
@@ -125,7 +125,7 @@ BEGIN
     FROM table_example_multi_procedure
     ORDER BY id;
 
-    DROP TABLE IF EXISTS table_example_multi_procedure;
+    DROP TEMPORARY TABLE IF EXISTS table_example_multi_procedure;
 
     -- Compare the expected and actual results and return 1 if they match, 0 otherwise
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
