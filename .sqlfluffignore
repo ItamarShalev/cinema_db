@@ -1,2 +1,3 @@
 # Since this file contains all the insert values and too big, ignore it.
 sql/data.sql
+.idea/
