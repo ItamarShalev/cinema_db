@@ -81,3 +81,24 @@ CREATE OR REPLACE VIEW view_employee_with_amount_products AS
     LEFT JOIN sell ON employee.id = sell.employee_id
     WHERE sell.employee_id IS NULL
 );
+
+CREATE OR REPLACE VIEW view_vip_movies_with_free_seats AS
+(
+    SELECT
+        movie.id,
+        movie.movie_name,
+        screen.room_number,
+        screen.screen_time
+    FROM movie
+    INNER JOIN screen INNER JOIN theater
+    ON screen.room_number = theater.room_number AND movie.id = screen.movie_id
+    WHERE theater.is_vip = TRUE AND EXISTS(
+        SELECT id
+        FROM ticket
+        WHERE ticket.room_number = theater.room_number AND ticket.screen_time = screen.screen_time
+        AND ticket.id NOT IN (SELECT ticket_id
+                              FROM sell
+                              WHERE ticket_id IS NOT NULL)
+    )
+    ORDER BY screen.screen_time
+);
