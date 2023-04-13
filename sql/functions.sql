@@ -17,4 +17,17 @@ BEGIN
     RETURN count_tables;
 END;
 
--- SELECT count_tables_in_database();
+DROP FUNCTION IF EXISTS get_money_earned_in_month;
+CREATE FUNCTION get_money_earned_in_month(param_year INT, param_month INT)
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE result INT;
+
+    SELECT COALESCE(SUM(sales), 0)
+    INTO result
+    FROM view_earn_per_month
+    WHERE at_year = param_year AND at_month = param_month;
+
+    RETURN result;
+END;

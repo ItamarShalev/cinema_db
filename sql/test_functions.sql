@@ -122,3 +122,24 @@ BEGIN
 
     RETURN test_result;
 END;
+
+DROP FUNCTION IF EXISTS test_get_money_earned_in_month;
+CREATE FUNCTION test_get_money_earned_in_month()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE test_result INT;
+    DECLARE result_3365 INT;
+    DECLARE result_0 INT;
+
+    SELECT get_money_earned_in_month(2023, 3)
+    INTO result_3365;
+
+    SELECT get_money_earned_in_month(2043, 1)
+    INTO result_0;
+
+    SELECT result_0 = 0 AND result_3365 = 3365
+    INTO test_result;
+
+    RETURN test_result;
+END;
