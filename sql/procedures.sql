@@ -196,3 +196,12 @@ BEGIN
     SET succeed = TRUE;
 
 END;
+
+DROP PROCEDURE IF EXISTS delete_useless_employees;
+CREATE PROCEDURE delete_useless_employees()
+BEGIN
+    -- Delete all employees that didn't sell any item and they are not managers
+    DELETE FROM employee
+    WHERE id NOT IN (SELECT employee_id FROM sell)
+      AND id NOT IN (SELECT manager_id FROM department);
+END;

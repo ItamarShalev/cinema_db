@@ -170,3 +170,31 @@ BEGIN
 
     SELECT test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_delete_useless_employees;
+CREATE PROCEDURE test_delete_useless_employees()
+BEGIN
+    DECLARE test_result INT;
+    DECLARE employees_count INT;
+    DECLARE employees_current_count INT;
+
+    SELECT COUNT(*)
+    INTO employees_count
+    FROM employee;
+
+    -- Don't save the result of this delete command.
+    START TRANSACTION;
+
+    CALL delete_useless_employees();
+
+    SELECT COUNT(*)
+    INTO employees_current_count
+    FROM employee;
+
+    SELECT employees_count != employees_current_count
+    INTO test_result;
+
+    ROLLBACK;
+
+    SELECT test_result;
+END;
