@@ -143,3 +143,24 @@ BEGIN
 
     RETURN test_result;
 END;
+
+DROP FUNCTION IF EXISTS test_get_money_earned_in_year;
+CREATE FUNCTION test_get_money_earned_in_year()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE test_result INT;
+    DECLARE result_3650 INT;
+    DECLARE result_0 INT;
+
+    SELECT get_money_earned_in_year(2023)
+    INTO result_3650;
+
+    SELECT get_money_earned_in_year(2043)
+    INTO result_0;
+
+    SELECT result_0 = 0 AND result_3650 = 3650
+    INTO test_result;
+
+    RETURN test_result;
+END;

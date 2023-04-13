@@ -31,3 +31,18 @@ BEGIN
 
     RETURN result;
 END;
+
+DROP FUNCTION IF EXISTS get_money_earned_in_year;
+CREATE FUNCTION get_money_earned_in_year(param_year INT)
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE result INT;
+
+    SELECT COALESCE(SUM(sales), 0)
+    INTO result
+    FROM view_earn_per_month
+    WHERE at_year = param_year;
+
+    RETURN result;
+END;
