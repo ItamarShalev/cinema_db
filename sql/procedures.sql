@@ -160,3 +160,39 @@ BEGIN
     SELECT ROW_COUNT() > 0
     INTO succeed;
 END;
+
+DROP PROCEDURE IF EXISTS update_manager_to_department;
+CREATE PROCEDURE update_manager_to_department(
+    IN param_manager_id INT,
+    IN param_department_id INT,
+    OUT succeed BOOLEAN)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+        END;
+
+    SET succeed = FALSE;
+
+    START TRANSACTION;
+
+    IF param_manager_id IN (SELECT manager_id FROM department WHERE id != param_department_id) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'The manager is already manager in different department.';
+    END IF;
+
+    START TRANSACTION;
+
+    UPDATE employee
+    SET department_id = param_department_id
+    WHERE id = param_manager_id;
+
+    UPDATE department
+    SET manager_id = param_manager_id
+    WHERE id = param_department_id;
+
+    COMMIT;
+
+    SET succeed = TRUE;
+
+END;

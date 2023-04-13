@@ -149,3 +149,24 @@ BEGIN
 
     SELECT test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_update_manager_to_department;
+CREATE PROCEDURE test_update_manager_to_department()
+BEGIN
+    DECLARE test_result INT;
+    DECLARE result_failed BOOLEAN;
+    DECLARE result_succeed BOOLEAN;
+
+    -- Don't save the result of this update command.
+    START TRANSACTION;
+
+    CALL update_manager_to_department(4, 2, result_failed);
+    CALL update_manager_to_department(15, 2, result_succeed);
+
+    ROLLBACK;
+
+    SELECT result_failed = FALSE AND result_succeed = TRUE
+    INTO test_result;
+
+    SELECT test_result;
+END;
