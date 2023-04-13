@@ -60,3 +60,24 @@ CREATE OR REPLACE VIEW view_employee_with_sales_money AS
     LEFT JOIN sell ON employee.id = sell.employee_id
     WHERE sell.employee_id IS NULL
 );
+
+CREATE OR REPLACE VIEW view_employee_with_amount_products AS
+(
+    SELECT
+        employee.id,
+        employee.first_name,
+        employee.last_name,
+        COUNT(employee.id) AS products_amount
+    FROM employee
+    INNER JOIN sell ON employee.id = sell.employee_id
+    GROUP BY employee.id
+    UNION DISTINCT
+    SELECT
+        employee.id,
+        employee.first_name,
+        employee.last_name,
+        0 AS products_amount
+    FROM employee
+    LEFT JOIN sell ON employee.id = sell.employee_id
+    WHERE sell.employee_id IS NULL
+);

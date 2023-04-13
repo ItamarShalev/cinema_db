@@ -135,3 +135,11 @@ BEGIN
 
     SELECT * FROM temporary_table_get_employee_earned_most_money;
 END;
+
+DROP PROCEDURE IF EXISTS get_employees_not_sold_more_than_x_products;
+CREATE PROCEDURE get_employees_not_sold_more_than_x_products(IN param_product_count INT)
+BEGIN
+    SELECT *
+    FROM view_employee_with_amount_products
+    WHERE products_amount < param_product_count;
+END;

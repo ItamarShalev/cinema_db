@@ -100,3 +100,25 @@ BEGIN
 
     RETURN test_result;
 END;
+
+DROP FUNCTION IF EXISTS test_employee_with_amount_products;
+CREATE FUNCTION test_employee_with_amount_products()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+
+    SET expected_result = CONCAT('1,0|2,0|3,10|4,0|5,11|6,0|7,7|8,3|9,0|10,0|11,4|12,10|13,0|14,0',
+                                 '|15,7|16,8|17,0|18,0|19,10|20,7|21,0|22,0|23,4|24,7|25,0|26,0',
+                                 '|27,4|28,6|29,0|30,0');
+
+    SELECT GROUP_CONCAT(CONCAT(id, ',', products_amount) ORDER BY id SEPARATOR '|')
+    INTO actual_result
+    FROM view_employee_with_amount_products;
+
+    SET test_result =  IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;
