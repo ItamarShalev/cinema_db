@@ -201,6 +201,12 @@ namespace cinemaDB
             Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_vip_movies_with_free_seats"));
         }
 
+        [TestMethod]
+        public void TestRemoveScreenIfNoTickets()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_remove_screen_if_no_tickets"));
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

@@ -128,3 +128,24 @@ BEGIN
 
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_remove_screen_if_no_tickets;
+CREATE PROCEDURE test_remove_screen_if_no_tickets()
+BEGIN
+    DECLARE test_result INT;
+    DECLARE result_failed BOOLEAN;
+    DECLARE result_succeed BOOLEAN;
+
+    -- Don't save the result of this delete command.
+    START TRANSACTION;
+
+    CALL remove_screen_if_no_tickets(1, '2023-03-03 12:00:00', result_failed);
+    CALL remove_screen_if_no_tickets(4, '2023-03-11 21:00:00', result_succeed);
+
+    ROLLBACK;
+
+    SELECT result_failed = FALSE AND result_succeed = TRUE
+    INTO test_result;
+
+    SELECT test_result;
+END;

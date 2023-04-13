@@ -143,3 +143,20 @@ BEGIN
     FROM view_employee_with_amount_products
     WHERE products_amount < param_product_count;
 END;
+
+DROP PROCEDURE IF EXISTS remove_screen_if_no_tickets;
+CREATE PROCEDURE remove_screen_if_no_tickets(
+    IN param_room_number INT,
+    IN param_screen_time DATETIME,
+    OUT succeed BOOLEAN)
+BEGIN
+    DELETE FROM screen
+    WHERE room_number = param_room_number AND screen_time = param_screen_time
+    AND NOT EXISTS(SELECT ticket.id
+                   FROM ticket
+                   WHERE room_number = param_room_number AND screen_time = param_screen_time
+                   AND ticket.id IN (SELECT ticket_id FROM sell WHERE ticket_id IS NOT NULL));
+
+    SELECT ROW_COUNT() > 0
+    INTO succeed;
+END;
