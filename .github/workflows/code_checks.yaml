@@ -20,7 +20,7 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore /nowarn:MSB3246
 
     - name: Write secret MySQL login details to file
       run: echo ${{ secrets.MYSQL_LOGIN_DETAILS }} >> secret_mysql_login.txt
