@@ -100,8 +100,8 @@ BEGIN
     CALL get_employee_with_most_products();
 
     SELECT GROUP_CONCAT(
-        CONCAT(id, ',', first_name, ',', last_name, ',', product_count)
-        ORDER BY id SEPARATOR '|')
+                   CONCAT(id, ',', first_name, ',', last_name, ',', product_count)
+                   ORDER BY id SEPARATOR '|')
     INTO actual_result
     FROM temporary_table_employee_with_most_products;
 
@@ -119,8 +119,8 @@ BEGIN
     CALL get_employee_earned_most_money();
 
     SELECT GROUP_CONCAT(
-        CONCAT(id, ',', first_name, ',', last_name, ',', money)
-        ORDER BY id SEPARATOR '|')
+                   CONCAT(id, ',', first_name, ',', last_name, ',', money)
+                   ORDER BY id SEPARATOR '|')
     INTO actual_result
     FROM temporary_table_get_employee_earned_most_money;
 
@@ -197,4 +197,148 @@ BEGIN
     ROLLBACK;
 
     SELECT test_result;
+END;
+
+DROP PROCEDURE IF EXISTS test_department_workers;
+CREATE PROCEDURE test_department_workers()
+BEGIN
+    DECLARE expected_result TEXT DEFAULT 'Alice,Grace,Karen,Amanda,Stephanie,Taylor';
+    DECLARE actual_result TEXT;
+
+    CALL department_workers(4);
+
+    SELECT GROUP_CONCAT(first_name SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_department_workers;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_department_workers;
+
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
+
+DROP PROCEDURE IF EXISTS test_movies_of_date;
+CREATE PROCEDURE test_movies_of_date()
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+
+    SET expected_result = 'Forrest Gump,The Dark Knight,The Godfather,The Shawshank Redemption';
+
+    CALL movies_of_date('2023-03-06');
+
+    SELECT GROUP_CONCAT(movie_name SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_movies_of_today;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
+
+DROP PROCEDURE IF EXISTS test_shortest_movie;
+CREATE PROCEDURE test_shortest_movie()
+BEGIN
+    DECLARE expected_result TEXT DEFAULT '7,The Lion King';
+    DECLARE actual_result TEXT;
+
+    CALL shortest_movie();
+
+    SELECT GROUP_CONCAT(CONCAT(id, ',', movie_name) ORDER BY id SEPARATOR '|')
+    INTO actual_result
+    FROM temporary_table_shortest_movie;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_shortest_movie;
+
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
+
+DROP PROCEDURE IF EXISTS test_food_for_toddlers;
+CREATE PROCEDURE test_food_for_toddlers()
+BEGIN
+
+    DECLARE expected_result TEXT DEFAULT 'Small Soda,Medium Soda,Large Soda,Ice Cream';
+    DECLARE actual_result TEXT;
+
+    CALL food_for_toddlers(2);
+
+    SELECT GROUP_CONCAT(product_name SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_food_for_toddlers;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
+
+DROP PROCEDURE IF EXISTS test_tickets_for_screen;
+CREATE PROCEDURE test_tickets_for_screen()
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+
+    SET expected_result = CONCAT('11,12,13,14,15,16,17,18,19,31,32,33,34,35,36,37,38,39,40,61',
+                                 ',62,63,64,65,66,67,68,69,70,79,80,81,82,83,84,85,86,87,88,89,',
+                                 '90,91,92,93,94,95,96,97,98,99,100');
+
+    CALL tickets_for_screen('2023-03-06 12:00:00','The Shawshank Redemption');
+
+    SELECT GROUP_CONCAT(id SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_tickets_for_screen;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
+
+DROP PROCEDURE IF EXISTS test_customers_that_bought_in_certain_cost;
+CREATE PROCEDURE test_customers_that_bought_in_certain_cost()
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+
+    SET expected_result = CONCAT('Alexander Turner,Sophia Rodriguez,Avery Ward,Sarah Johnson',
+                                 ',Mia Wilson,David Brown,John Smith,Abigail Reyes,Lucas Evans',
+                                 ',Owen Richardson,Aurora Adams,Lila Ramirez,Caroline Nelson',
+                                 ',Carter Scott,Dylan Cooper,Avery Green,Ethan Chavez,Henry Morris',
+                                 ',Matthew Jones,Anthony Scott,Michael Davis,Victoria Phillips',
+                                 ',Christopher Baker,Olivia Martin,Isabella Nguyen',
+                                 ',William Hernandez,Wyatt Coleman,Jessica Lee,Emily Wilson',
+                                 ',Elijah Wright,Audrey Collins,Madison Mitchell,Sofia Parker',
+                                 ',Amelia Collins,Leah Cook,Aiden Garcia,Mila Hall,Jackson Rivera');
+
+    CALL customers_that_bought_in_certain_cost(7);
+
+    SELECT GROUP_CONCAT(customer_name SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_customers_that_bought_in_certain_cost;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
+
+DROP PROCEDURE IF EXISTS test_screens_not_in_theater;
+CREATE PROCEDURE test_screens_not_in_theater()
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+
+    SET expected_result = CONCAT('The Shawshank Redemption',
+                                 ',The Lord of the Rings: The Return of the King',
+                                 ',American History X,The Godfather',
+                                 ',Star Wars: Episode IV - A New Hope,Saving Private Ryan',
+                                 ',The Dark Knight,The Silence of the Lambs,Interstellar',
+                                 ',Inception,The Godfather: Part II,Se7en',
+                                 ',The Lord of the Rings: The Fellowship of the Ring',
+                                 ',The Lord of the Rings: The Two Towers,Gladiator',
+                                 ',The Lion King,Schindler''s List,The Departed,The Matrix',
+                                 ',For a Few Dollars More,The Terminator,Pulp Fiction',
+                                 ',The Usual Suspects,The Sixth Sense,Fight Club,The Prestige',
+                                 ',Eternal Sunshine of the Spotless Mind');
+
+    CALL screens_not_in_theater(4);
+
+    SELECT GROUP_CONCAT(movie_name SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_screens_not_in_thetaer;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;

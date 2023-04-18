@@ -95,8 +95,8 @@ BEGIN
     SET has_zeros_sales = IF(0 IN (SELECT sales FROM view_employee_with_sales_money), 1, 0);
 
     SET test_result =  IF(has_zeros_sales = 0
-                          OR actual_result != expected_result
-                          OR actual_result IS NULL, 0, 1);
+                              OR actual_result != expected_result
+                              OR actual_result IS NULL, 0, 1);
 
     RETURN test_result;
 END;
@@ -175,20 +175,106 @@ BEGIN
     DECLARE test_result INT;
 
     SET expected_result = CONCAT('3,The Dark Knight,3,2023-03-06 18:00:00',
-        '|5,Inception,5,2023-03-07 12:00:00|7,The Lion King,7,2023-03-07 18:00:00',
-        '|10,Fight Club,10,2023-03-08 15:00:00|13,The Silence of the Lambs,3,2023-03-09 12:00:00',
-        '|15,The Godfather: Part II,5,2023-03-09 18:00:00',
-        '|17,Schindler''s List,7,2023-03-10 12:00:00|20,The Prestige,10,2023-03-10 21:00:00',
-        '|23,Interstellar,3,2023-03-11 18:00:00|25,Se7en,5,2023-03-12 12:00:00',
-        '|27,The Departed,7,2023-03-12 18:00:00',
-        '|30,Eternal Sunshine of the Spotless Mind,10,2023-03-13 15:00:00');
+                                 '|5,Inception,5,2023-03-07 12:00:00',
+                                 '|7,The Lion King,7,2023-03-07 18:00:00',
+                                 '|10,Fight Club,10,2023-03-08 15:00:00',
+                                 '|13,The Silence of the Lambs,3,2023-03-09 12:00:00',
+                                 '|15,The Godfather: Part II,5,2023-03-09 18:00:00',
+                                 '|17,Schindler''s List,7,2023-03-10 12:00:00',
+                                 '|20,The Prestige,10,2023-03-10 21:00:00',
+                                 '|23,Interstellar,3,2023-03-11 18:00:00',
+                                 '|25,Se7en,5,2023-03-12 12:00:00',
+                                 '|27,The Departed,7,2023-03-12 18:00:00',
+                                 '|30,Eternal Sunshine of the Spotless Mind,10,',
+                                 '2023-03-13 15:00:00');
 
     SELECT GROUP_CONCAT(CONCAT(id, ',', movie_name, ',', room_number, ',', screen_time)
-        ORDER BY id SEPARATOR '|')
+                        ORDER BY id SEPARATOR '|')
     INTO actual_result
     FROM view_vip_movies_with_free_seats;
 
     SET test_result =  IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;
+
+DROP FUNCTION IF EXISTS test_view_vip_movies;
+CREATE FUNCTION test_view_vip_movies()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+
+    SET expected_result = CONCAT('The Dark Knight,The Silence of the Lambs,Interstellar',
+                                 ',Inception,The Godfather: Part II,Se7en,The Lion King',
+                                 ',Schindler''s List,The Departed,Fight Club,The Prestige',
+                                 ',Eternal Sunshine of the Spotless Mind');
+
+    SELECT GROUP_CONCAT(movie_name SEPARATOR ',')
+    INTO actual_result
+    FROM view_vip_movies;
+
+    SET test_result = IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;
+
+DROP FUNCTION IF EXISTS test_view_food_contains_dairy;
+CREATE FUNCTION test_view_food_contains_dairy()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result TEXT DEFAULT 'Ice Cream';
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+
+    SELECT GROUP_CONCAT(product_name  SEPARATOR ',')
+    INTO actual_result
+    FROM view_food_contains_dairy;
+
+    SET test_result = IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;
+
+DROP FUNCTION IF EXISTS test_view_non_dairy_food;
+CREATE FUNCTION test_view_non_dairy_food()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+
+    SET expected_result = CONCAT('Small Soda,Medium Soda,Large Soda,Pretzel,Pizza Slice',
+                                 ',Chicken Tenders,Fries,Onion Rings,Nachos,Small Popcorn',
+                                 ',Medium Popcorn,Large Popcorn,Hot Dog,Candy');
+
+    SELECT GROUP_CONCAT(product_name  SEPARATOR ',')
+    INTO actual_result
+    FROM view_non_dairy_food;
+
+    SET test_result = IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;
+
+DROP FUNCTION IF EXISTS test_view_employee_that_sold;
+CREATE FUNCTION test_view_employee_that_sold()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result TEXT DEFAULT '20,3,15,19,7,11,12,16,5,27,8,24,28,23';
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+
+    SELECT GROUP_CONCAT(id  SEPARATOR ',')
+    INTO actual_result
+    FROM view_employee_that_sold;
+
+    SET test_result = IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
 
     RETURN test_result;
 END;

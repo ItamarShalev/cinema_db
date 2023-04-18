@@ -219,6 +219,73 @@ namespace cinemaDB
             Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_delete_useless_employees"));
         }
 
+        [TestMethod]
+        public void TestDepartmentWorkers()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_department_workers"));
+        }
+
+        [TestMethod]
+        public void TestMoviesOfDate()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_movies_of_date"));
+        }
+
+        [TestMethod]
+        public void TestShortestMovie()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_shortest_movie"));
+        }
+
+        [TestMethod]
+        public void TestFoodForToddlers()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_food_for_toddlers"));
+        }
+
+        [TestMethod]
+        public void TestTicketsForScreen()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_tickets_for_screen"));
+        }
+
+        [TestMethod]
+        public void TestCustomerBoughtCertainCost()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_customers_that_bought_in_certain_cost"));
+        }
+
+
+        [TestMethod]
+        public void TestScreenNotInTheater()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_screens_not_in_theater"));
+        }
+
+        [TestMethod]
+        public void TestViewVipMovies()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_view_vip_movies"));
+        }
+
+        [TestMethod]
+        public void TestViewFoodContainsDairy()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_view_food_contains_dairy"));
+        }
+
+        [TestMethod]
+        public void TestViewNonDairyFood()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_view_non_dairy_food"));
+        }
+
+        [TestMethod]
+        public void TestViewEmployeeThatSold()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_view_employee_that_sold"));
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

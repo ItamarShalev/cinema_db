@@ -205,3 +205,202 @@ BEGIN
     WHERE id NOT IN (SELECT employee_id FROM sell)
       AND id NOT IN (SELECT manager_id FROM department);
 END;
+
+-- Returns all workers id, and full name from specific department.
+DROP PROCEDURE IF EXISTS department_workers;
+CREATE PROCEDURE department_workers(IN dep_num INT)
+BEGIN
+    DROP TABLE IF EXISTS temporary_table_department_workers;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_department_workers
+    (
+        id         INT,
+        first_name VARCHAR(255),
+        last_name  VARCHAR(255)
+    );
+
+    INSERT INTO temporary_table_department_workers
+    SELECT id, first_name, last_name
+    FROM employee
+    WHERE department_id = dep_num;
+
+    SELECT * FROM temporary_table_department_workers ORDER BY id;
+END;
+
+-- All movies in specific date.
+DROP PROCEDURE IF EXISTS movies_of_date;
+CREATE PROCEDURE movies_of_date(IN param_date DATE)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_movies_of_today
+    (
+        screen_time DATETIME,
+        movie_name  VARCHAR(255)
+    );
+
+    INSERT INTO temporary_table_movies_of_today
+    SELECT screen_time, movie_name
+    FROM movie
+    INNER JOIN screen
+    ON movie.id = screen.movie_id
+    WHERE DATE(screen.screen_time) = param_date;
+
+    SELECT * FROM temporary_table_movies_of_today;
+END;
+
+-- The shortest movie.
+DROP PROCEDURE IF EXISTS shortest_movie;
+CREATE PROCEDURE shortest_movie()
+BEGIN
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_shortest_movie;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_shortest_movie
+    (
+        id INT,
+        movie_name VARCHAR(50)
+    );
+
+    INSERT INTO temporary_table_shortest_movie
+    SELECT id, movie_name
+    FROM movie
+    WHERE duration_in_minutes = (SELECT MIN(duration_in_minutes) FROM movie);
+
+    SELECT * FROM temporary_table_shortest_movie;
+
+END;
+
+-- Food for children under a certain age.
+DROP PROCEDURE IF EXISTS food_for_toddlers;
+CREATE PROCEDURE food_for_toddlers(IN param_min_age INT)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_food_for_toddlers;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_food_for_toddlers
+    (
+        price        INT,
+        product_name VARCHAR(255)
+    );
+
+    INSERT INTO temporary_table_food_for_toddlers
+    SELECT price, product_name
+    FROM food
+    INNER JOIN product
+    ON food.id = product.id
+    WHERE food.min_age <= param_min_age;
+
+    SELECT * FROM temporary_table_food_for_toddlers;
+END;
+
+-- All tickets for specific screen, will return all available seats.
+DROP PROCEDURE IF EXISTS tickets_for_screen;
+CREATE PROCEDURE tickets_for_screen(IN param_screen_time DATETIME, IN param_movie_name VARCHAR(255))
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_tickets_for_screen;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_tickets_for_screen
+    (
+        id   INT,
+        seat INT
+    );
+
+    INSERT INTO temporary_table_tickets_for_screen
+    SELECT ticket.id, ticket.seat_number
+    FROM ticket
+    INNER JOIN screen
+    INNER JOIN theater
+    INNER JOIN movie
+    ON screen.movie_id = movie.id
+        AND screen.room_number = theater.room_number
+        AND ticket.room_number = screen.room_number
+    WHERE ticket.screen_time = param_screen_time
+      AND screen.screen_time = param_screen_time
+      AND movie.movie_name = param_movie_name
+      AND ticket.id NOT IN (SELECT ticket_id
+                            FROM sell
+                            WHERE ticket_id IS NOT NULL);
+
+    SELECT * FROM temporary_table_tickets_for_screen;
+END;
+
+-- All customers that bought a product that is in a certain cost or more.
+DROP PROCEDURE IF EXISTS customers_that_bought_in_certain_cost;
+CREATE PROCEDURE customers_that_bought_in_certain_cost(IN param_cost INT)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_customers_that_bought_in_certain_cost;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_customers_that_bought_in_certain_cost
+    (
+        customer_name VARCHAR(255)
+    );
+
+    INSERT INTO temporary_table_customers_that_bought_in_certain_cost
+    SELECT DISTINCT customer_name
+    FROM customer
+    INNER JOIN sell INNER JOIN product
+    ON sell.product_id = product.id AND customer.id = sell.customer_id
+    WHERE product.price >= param_cost;
+
+    SELECT * FROM temporary_table_customers_that_bought_in_certain_cost;
+END;
+
+-- All screens that are NOT screened in a specific room.
+DROP PROCEDURE IF EXISTS screens_not_in_theater;
+CREATE PROCEDURE screens_not_in_theater(IN param_room INT)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_screens_not_in_thetaer;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_screens_not_in_thetaer
+    (
+        screen_time DATETIME,
+        movie_name  VARCHAR(255)
+    );
+
+    INSERT INTO temporary_table_screens_not_in_thetaer
+    SELECT screen_time, movie_name
+    FROM screen
+    INNER JOIN theater INNER JOIN movie
+    ON screen.room_number = theater.room_number AND screen.movie_id = movie.id
+    WHERE screen.room_number != param_room;
+
+    SELECT * FROM temporary_table_screens_not_in_thetaer;
+END;
+
+-- Delete certain food that we stopped selling.
+DROP PROCEDURE IF EXISTS delete_food;
+CREATE PROCEDURE delete_food(IN id INT)
+BEGIN
+    DELETE FROM product WHERE product.id = id;
+    DELETE FROM food WHERE food.id = id;
+END;
+
+-- Add new food for sale.
+DROP PROCEDURE IF EXISTS add_food;
+CREATE PROCEDURE add_food(IN param_name VARCHAR(255), IN param_cost INT)
+BEGIN
+    IF NOT EXISTS(SELECT * FROM product WHERE product_name = param_name) THEN
+        INSERT INTO product(product_name, price)
+        VALUES (param_name, param_cost);
+        SELECT 'New product was added to Products' AS message;
+    ELSE
+        SELECT 'This name already exists!' AS message;
+    END IF;
+END;
+
+-- Add new employee.
+DROP PROCEDURE IF EXISTS add_employee;
+CREATE PROCEDURE add_employee(IN param_first_name VARCHAR(255), IN param_last_name VARCHAR(255),
+                              IN param_date_of_birth DATE, IN param_department INT)
+BEGIN
+    IF NOT EXISTS(SELECT * FROM department WHERE id = param_department) THEN
+        SELECT 'Department number does not exists!' AS message;
+    END IF;
+    IF EXISTS(SELECT *
+              FROM employee
+              WHERE first_name = param_first_name
+                AND last_name = param_last_name
+                AND date_of_birth = param_date_of_birth) THEN
+
+        INSERT INTO employee(first_name, last_name, date_of_birth, department_id)
+        VALUES (param_first_name, param_last_name, param_date_of_birth, param_department);
+        SELECT 'New Employee was added! notice there is an employee with same info.' AS message;
+    ELSE
+        INSERT INTO employee(first_name, last_name, date_of_birth, department_id)
+        VALUES (param_first_name, param_last_name, param_date_of_birth, param_department);
+        SELECT 'New Employee was added!' AS message;
+    END IF;
+END;
