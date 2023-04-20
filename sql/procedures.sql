@@ -362,45 +362,71 @@ END;
 
 -- Delete certain food that we stopped selling.
 DROP PROCEDURE IF EXISTS delete_food;
-CREATE PROCEDURE delete_food(IN id INT)
+CREATE PROCEDURE delete_food(IN id INT, OUT succeed BOOLEAN)
 BEGIN
-    DELETE FROM product WHERE product.id = id;
-    DELETE FROM food WHERE food.id = id;
+    DECLARE product_count INT;
+    DECLARE food_count INT;
+
+    SELECT COUNT(*) INTO product_count FROM product WHERE product.id = id;
+    SELECT COUNT(*) INTO food_count FROM food WHERE food.id = id;
+
+    IF product_count = 0 OR food_count = 0 THEN
+        SET succeed = 0;
+    ELSE
+        DELETE FROM food WHERE food.id = id;
+        DELETE FROM product WHERE product.id = id;
+        SET succeed = 1;
+    END IF;
 END;
 
 -- Add new food for sale.
 DROP PROCEDURE IF EXISTS add_food;
-CREATE PROCEDURE add_food(IN param_name VARCHAR(255), IN param_cost INT)
+CREATE PROCEDURE add_food(
+IN param_name VARCHAR(255),
+IN param_cost INT,
+IN param_need_cooling TINYINT,
+IN param_allegry VARCHAR(10),
+IN param_min_age INT,
+OUT succeed BOOLEAN)
+
 BEGIN
-    IF NOT EXISTS(SELECT * FROM product WHERE product_name = param_name) THEN
+    IF NOT EXISTS(SELECT * FROM product WHERE product_name = param_name) AND
+       param_cost > 0 AND param_min_age > 0
+        THEN
         INSERT INTO product(product_name, price)
         VALUES (param_name, param_cost);
-        SELECT 'New product was added to Products' AS message;
+        INSERT INTO food(id, need_cooling, allergy, min_age)
+        VALUES ((SELECT LAST_INSERT_ID()), param_need_cooling, param_allegry, param_min_age);
+        SET succeed = 1;
     ELSE
-        SELECT 'This name already exists!' AS message;
+        SET succeed = 0;
     END IF;
 END;
 
 -- Add new employee.
 DROP PROCEDURE IF EXISTS add_employee;
 CREATE PROCEDURE add_employee(IN param_first_name VARCHAR(255), IN param_last_name VARCHAR(255),
-                              IN param_date_of_birth DATE, IN param_department INT)
+                              IN param_date_of_birth DATE, IN param_department INT,
+                              OUT succeed BOOLEAN)
 BEGIN
-    IF NOT EXISTS(SELECT * FROM department WHERE id = param_department) THEN
-        SELECT 'Department number does not exists!' AS message;
+    IF NOT EXISTS(SELECT * FROM department WHERE id = param_department) OR
+       param_first_name != '' OR param_last_name != '' OR
+       EXISTS(SELECT * FROM employee WHERE first_name = param_first_name AND last_name = param_last_name
+           AND date_of_birth = param_date_of_birth)
+        THEN
+        SET succeed = 0;
+        SELECT 'Error';
     END IF;
     IF EXISTS(SELECT *
               FROM employee
               WHERE first_name = param_first_name
                 AND last_name = param_last_name
                 AND date_of_birth = param_date_of_birth) THEN
-
-        INSERT INTO employee(first_name, last_name, date_of_birth, department_id)
-        VALUES (param_first_name, param_last_name, param_date_of_birth, param_department);
-        SELECT 'New Employee was added! notice there is an employee with same info.' AS message;
+        SET succeed = 0;
     ELSE
         INSERT INTO employee(first_name, last_name, date_of_birth, department_id)
         VALUES (param_first_name, param_last_name, param_date_of_birth, param_department);
-        SELECT 'New Employee was added!' AS message;
+        SET succeed = 1;
     END IF;
 END;
+
