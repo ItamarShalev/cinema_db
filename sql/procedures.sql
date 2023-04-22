@@ -402,3 +402,33 @@ BEGIN
         SET succeed = 0;
     END IF;
 END;
+
+-- Add new employee.
+DROP PROCEDURE IF EXISTS add_employee;
+CREATE PROCEDURE add_employee(IN param_first_name VARCHAR(255), IN param_last_name VARCHAR(255),
+                              IN param_date_of_birth DATE, IN param_department INT,
+                              OUT succeed BOOLEAN)
+BEGIN
+    IF NOT EXISTS(SELECT * FROM department WHERE id = param_department)
+        OR param_first_name != '' OR param_last_name != ''
+        OR EXISTS(SELECT *
+                  FROM employee
+                  WHERE first_name = param_first_name
+                    AND last_name = param_last_name
+                    AND date_of_birth = param_date_of_birth)
+    THEN
+        SET succeed = 0;
+        SELECT 'Error';
+    END IF;
+    IF EXISTS(SELECT *
+              FROM employee
+              WHERE first_name = param_first_name
+                AND last_name = param_last_name
+                AND date_of_birth = param_date_of_birth) THEN
+        SET succeed = 0;
+    ELSE
+        INSERT INTO employee(first_name, last_name, date_of_birth, department_id)
+        VALUES (param_first_name, param_last_name, param_date_of_birth, param_department);
+        SET succeed = 1;
+    END IF;
+END;

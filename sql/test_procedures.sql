@@ -382,3 +382,23 @@ BEGIN
 
     SELECT test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_add_employee;
+CREATE PROCEDURE test_add_employee()
+BEGIN
+    DECLARE test_result INT;
+    DECLARE result_failed BOOLEAN;
+    DECLARE result_succeed BOOLEAN;
+
+    START TRANSACTION;
+
+    CALL add_employee('ron','shaull', '1993-03-11', 2, result_succeed);
+    CALL add_employee('ron','shaull', '1993-03-11', 45, result_failed);
+
+    ROLLBACK;
+
+    SELECT result_failed = FALSE AND result_succeed = TRUE
+    INTO test_result;
+
+    SELECT test_result;
+END;
