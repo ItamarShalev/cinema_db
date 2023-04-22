@@ -137,3 +137,11 @@ CREATE OR REPLACE VIEW view_non_dairy_food AS
     WHERE food.allergy IS NULL
        OR food.allergy != 'milk'
 );
+
+-- Return all employees that sold anything.
+CREATE OR REPLACE VIEW view_employee_that_sold AS
+(
+    SELECT DISTINCT employee.id, employee.first_name , employee.last_name
+    FROM employee INNER JOIN sell
+    ON employee.id = sell.employee_id
+);

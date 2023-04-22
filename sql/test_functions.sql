@@ -260,3 +260,21 @@ BEGIN
 
     RETURN test_result;
 END;
+
+DROP FUNCTION IF EXISTS test_view_employee_that_sold;
+CREATE FUNCTION test_view_employee_that_sold()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result TEXT DEFAULT '20,3,15,19,7,11,12,16,5,27,8,24,28,23';
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+
+    SELECT GROUP_CONCAT(id  SEPARATOR ',')
+    INTO actual_result
+    FROM view_employee_that_sold;
+
+    SET test_result = IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;
