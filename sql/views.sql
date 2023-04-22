@@ -116,3 +116,13 @@ CREATE OR REPLACE VIEW view_vip_movies AS
     ON movie.id = screen.movie_id AND screen.room_number = theater.room_number
     WHERE theater.is_vip = 1
 );
+
+-- Return all food that contains dairy
+CREATE OR REPLACE VIEW view_food_contains_dairy AS
+(
+    SELECT price, product_name
+    FROM food
+    INNER JOIN product
+    ON food.id = product.id
+    WHERE food.allergy = 'milk'
+);

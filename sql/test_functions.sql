@@ -220,3 +220,21 @@ BEGIN
 
     RETURN test_result;
 END;
+
+DROP FUNCTION IF EXISTS test_view_food_contains_dairy;
+CREATE FUNCTION test_view_food_contains_dairy()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result TEXT DEFAULT 'Ice Cream';
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+
+    SELECT GROUP_CONCAT(product_name  SEPARATOR ',')
+    INTO actual_result
+    FROM view_food_contains_dairy;
+
+    SET test_result = IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;
