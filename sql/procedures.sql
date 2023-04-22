@@ -288,3 +288,33 @@ BEGIN
 
     SELECT * FROM temporary_table_food_for_toddlers;
 END;
+
+-- All tickets for specific screen, will return all available seats.
+DROP PROCEDURE IF EXISTS tickets_for_screen;
+CREATE PROCEDURE tickets_for_screen(IN param_screen_time DATETIME, IN param_movie_name VARCHAR(255))
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_tickets_for_screen;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_tickets_for_screen
+    (
+        id   INT,
+        seat INT
+    );
+
+    INSERT INTO temporary_table_tickets_for_screen
+    SELECT ticket.id, ticket.seat_number
+    FROM ticket
+    INNER JOIN screen
+    INNER JOIN theater
+    INNER JOIN movie
+    ON screen.movie_id = movie.id
+        AND screen.room_number = theater.room_number
+        AND ticket.room_number = screen.room_number
+    WHERE ticket.screen_time = param_screen_time
+      AND screen.screen_time = param_screen_time
+      AND movie.movie_name = param_movie_name
+      AND ticket.id NOT IN (SELECT ticket_id
+                            FROM sell
+                            WHERE ticket_id IS NOT NULL);
+
+    SELECT * FROM temporary_table_tickets_for_screen;
+END;
