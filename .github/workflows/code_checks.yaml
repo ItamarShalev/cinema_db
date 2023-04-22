@@ -9,6 +9,9 @@ on:
 jobs:
   Test:
     runs-on: ubuntu-latest
+    concurrency:
+      cancel-in-progress: false
+      group: ${{ github.workflow }}-Test
     steps:
     - uses: actions/checkout@v3.3.0
     - name: Setup .NET
