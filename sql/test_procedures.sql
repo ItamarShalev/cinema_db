@@ -313,3 +313,32 @@ BEGIN
     DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_screens_not_in_theater;
+CREATE PROCEDURE test_screens_not_in_theater()
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+
+    SET expected_result = CONCAT('The Shawshank Redemption',
+                                 ',The Lord of the Rings: The Return of the King',
+                                 ',American History X,The Godfather',
+                                 ',Star Wars: Episode IV - A New Hope,Saving Private Ryan',
+                                 ',The Dark Knight,The Silence of the Lambs,Interstellar',
+                                 ',Inception,The Godfather: Part II,Se7en',
+                                 ',The Lord of the Rings: The Fellowship of the Ring',
+                                 ',The Lord of the Rings: The Two Towers,Gladiator',
+                                 ',The Lion King,Schindler''s List,The Departed,The Matrix',
+                                 ',For a Few Dollars More,The Terminator,Pulp Fiction',
+                                 ',The Usual Suspects,The Sixth Sense,Fight Club,The Prestige',
+                                 ',Eternal Sunshine of the Spotless Mind');
+
+    CALL screens_not_in_theater(4);
+
+    SELECT GROUP_CONCAT(movie_name SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_screens_not_in_thetaer;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;

@@ -338,3 +338,24 @@ BEGIN
 
     SELECT * FROM temporary_table_customers_that_bought_in_certain_cost;
 END;
+
+-- All screens that are NOT screened in a specific room.
+DROP PROCEDURE IF EXISTS screens_not_in_theater;
+CREATE PROCEDURE screens_not_in_theater(IN param_room INT)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_screens_not_in_thetaer;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_screens_not_in_thetaer
+    (
+        screen_time DATETIME,
+        movie_name  VARCHAR(255)
+    );
+
+    INSERT INTO temporary_table_screens_not_in_thetaer
+    SELECT screen_time, movie_name
+    FROM screen
+    INNER JOIN theater INNER JOIN movie
+    ON screen.room_number = theater.room_number AND screen.movie_id = movie.id
+    WHERE screen.room_number != param_room;
+
+    SELECT * FROM temporary_table_screens_not_in_thetaer;
+END;
