@@ -106,3 +106,13 @@ CREATE OR REPLACE VIEW view_vip_movies_with_free_seats AS
     )
     ORDER BY screen.screen_time
 );
+
+-- Return all VIP movies.
+CREATE OR REPLACE VIEW view_vip_movies AS
+(
+    SELECT DISTINCT screen_time, movie_name
+    FROM movie
+    INNER JOIN screen INNER JOIN theater
+    ON movie.id = screen.movie_id AND screen.room_number = theater.room_number
+    WHERE theater.is_vip = 1
+);

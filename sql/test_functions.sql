@@ -197,3 +197,26 @@ BEGIN
 
     RETURN test_result;
 END;
+
+DROP FUNCTION IF EXISTS test_view_vip_movies;
+CREATE FUNCTION test_view_vip_movies()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+
+    SET expected_result = CONCAT('The Dark Knight,The Silence of the Lambs,Interstellar',
+                                 ',Inception,The Godfather: Part II,Se7en,The Lion King',
+                                 ',Schindler''s List,The Departed,Fight Club,The Prestige',
+                                 ',Eternal Sunshine of the Spotless Mind');
+
+    SELECT GROUP_CONCAT(movie_name SEPARATOR ',')
+    INTO actual_result
+    FROM view_vip_movies;
+
+    SET test_result = IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;
