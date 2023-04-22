@@ -198,3 +198,20 @@ BEGIN
 
     SELECT test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_department_workers;
+CREATE PROCEDURE test_department_workers()
+BEGIN
+    DECLARE expected_result TEXT DEFAULT 'Alice,Grace,Karen,Amanda,Stephanie,Taylor';
+    DECLARE actual_result TEXT;
+
+    CALL department_workers(4);
+
+    SELECT GROUP_CONCAT(first_name SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_department_workers;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_department_workers;
+
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;

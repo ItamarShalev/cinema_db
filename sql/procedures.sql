@@ -205,3 +205,23 @@ BEGIN
     WHERE id NOT IN (SELECT employee_id FROM sell)
       AND id NOT IN (SELECT manager_id FROM department);
 END;
+
+-- Returns all workers id, and full name from specific department.
+DROP PROCEDURE IF EXISTS department_workers;
+CREATE PROCEDURE department_workers(IN param_department_number INT)
+BEGIN
+    DROP TABLE IF EXISTS temporary_table_department_workers;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_department_workers
+    (
+        id         INT,
+        first_name VARCHAR(255),
+        last_name  VARCHAR(255)
+    );
+
+    INSERT INTO temporary_table_department_workers
+    SELECT id, first_name, last_name
+    FROM employee
+    WHERE department_id = param_department_number;
+
+    SELECT * FROM temporary_table_department_workers ORDER BY id;
+END;
