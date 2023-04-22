@@ -126,3 +126,14 @@ CREATE OR REPLACE VIEW view_food_contains_dairy AS
     ON food.id = product.id
     WHERE food.allergy = 'milk'
 );
+
+-- Return all non dairy food.
+CREATE OR REPLACE VIEW view_non_dairy_food AS
+(
+    SELECT price, product_name
+    FROM food
+    INNER JOIN product
+    ON food.id = product.id
+    WHERE food.allergy IS NULL
+       OR food.allergy != 'milk'
+);

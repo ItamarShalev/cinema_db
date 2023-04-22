@@ -238,3 +238,25 @@ BEGIN
 
     RETURN test_result;
 END;
+
+DROP FUNCTION IF EXISTS test_view_non_dairy_food;
+CREATE FUNCTION test_view_non_dairy_food()
+    RETURNS INT
+    DETERMINISTIC
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+    DECLARE test_result INT;
+
+    SET expected_result = CONCAT('Small Soda,Medium Soda,Large Soda,Pretzel,Pizza Slice',
+                                 ',Chicken Tenders,Fries,Onion Rings,Nachos,Small Popcorn',
+                                 ',Medium Popcorn,Large Popcorn,Hot Dog,Candy');
+
+    SELECT GROUP_CONCAT(product_name  SEPARATOR ',')
+    INTO actual_result
+    FROM view_non_dairy_food;
+
+    SET test_result = IF(actual_result != expected_result OR actual_result IS NULL, 0, 1);
+
+    RETURN test_result;
+END;
