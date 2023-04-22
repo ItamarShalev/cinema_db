@@ -318,3 +318,23 @@ BEGIN
 
     SELECT * FROM temporary_table_tickets_for_screen;
 END;
+
+-- All customers that bought a product that is in a certain cost or more.
+DROP PROCEDURE IF EXISTS customers_that_bought_in_certain_cost;
+CREATE PROCEDURE customers_that_bought_in_certain_cost(IN param_cost INT)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_customers_that_bought_in_certain_cost;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_customers_that_bought_in_certain_cost
+    (
+        customer_name VARCHAR(255)
+    );
+
+    INSERT INTO temporary_table_customers_that_bought_in_certain_cost
+    SELECT DISTINCT customer_name
+    FROM customer
+    INNER JOIN sell INNER JOIN product
+    ON sell.product_id = product.id AND customer.id = sell.customer_id
+    WHERE product.price >= param_cost;
+
+    SELECT * FROM temporary_table_customers_that_bought_in_certain_cost;
+END;

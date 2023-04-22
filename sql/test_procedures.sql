@@ -287,3 +287,29 @@ BEGIN
     DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_customers_that_bought_in_certain_cost;
+CREATE PROCEDURE test_customers_that_bought_in_certain_cost()
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+
+    SET expected_result = CONCAT('Alexander Turner,Sophia Rodriguez,Avery Ward,Sarah Johnson',
+                                 ',Mia Wilson,David Brown,John Smith,Abigail Reyes,Lucas Evans',
+                                 ',Owen Richardson,Aurora Adams,Lila Ramirez,Caroline Nelson',
+                                 ',Carter Scott,Dylan Cooper,Avery Green,Ethan Chavez,Henry Morris',
+                                 ',Matthew Jones,Anthony Scott,Michael Davis,Victoria Phillips',
+                                 ',Christopher Baker,Olivia Martin,Isabella Nguyen',
+                                 ',William Hernandez,Wyatt Coleman,Jessica Lee,Emily Wilson',
+                                 ',Elijah Wright,Audrey Collins,Madison Mitchell,Sofia Parker',
+                                 ',Amelia Collins,Leah Cook,Aiden Garcia,Mila Hall,Jackson Rivera');
+
+    CALL customers_that_bought_in_certain_cost(7);
+
+    SELECT GROUP_CONCAT(customer_name SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_customers_that_bought_in_certain_cost;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
