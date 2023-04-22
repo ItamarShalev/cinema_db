@@ -267,3 +267,24 @@ BEGIN
     SELECT * FROM temporary_table_shortest_movie;
 
 END;
+
+-- Food for children under a certain age.
+DROP PROCEDURE IF EXISTS food_for_toddlers;
+CREATE PROCEDURE food_for_toddlers(IN param_min_age INT)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_food_for_toddlers;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_food_for_toddlers
+    (
+        price        INT,
+        product_name VARCHAR(255)
+    );
+
+    INSERT INTO temporary_table_food_for_toddlers
+    SELECT price, product_name
+    FROM food
+    INNER JOIN product
+    ON food.id = product.id
+    WHERE food.min_age <= param_min_age;
+
+    SELECT * FROM temporary_table_food_for_toddlers;
+END;

@@ -250,3 +250,20 @@ BEGIN
 
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_food_for_toddlers;
+CREATE PROCEDURE test_food_for_toddlers()
+BEGIN
+
+    DECLARE expected_result TEXT DEFAULT 'Small Soda,Medium Soda,Large Soda,Ice Cream';
+    DECLARE actual_result TEXT;
+
+    CALL food_for_toddlers(2);
+
+    SELECT GROUP_CONCAT(product_name SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_food_for_toddlers;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
