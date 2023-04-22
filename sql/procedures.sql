@@ -378,3 +378,27 @@ BEGIN
         SET succeed = 1;
     END IF;
 END;
+
+-- Add new food for sale.
+DROP PROCEDURE IF EXISTS add_food;
+CREATE PROCEDURE add_food(
+IN param_name VARCHAR(255),
+IN param_cost INT,
+IN param_need_cooling TINYINT,
+IN param_allegry VARCHAR(10),
+IN param_min_age INT,
+OUT succeed BOOLEAN)
+
+BEGIN
+    IF NOT EXISTS(SELECT * FROM product WHERE product_name = param_name)
+        AND param_cost > 0 AND param_min_age > 0
+    THEN
+        INSERT INTO product(product_name, price)
+        VALUES (param_name, param_cost);
+        INSERT INTO food(id, need_cooling, allergy, min_age)
+        VALUES ((SELECT LAST_INSERT_ID()), param_need_cooling, param_allegry, param_min_age);
+        SET succeed = 1;
+    ELSE
+        SET succeed = 0;
+    END IF;
+END;

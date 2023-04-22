@@ -362,3 +362,23 @@ BEGIN
 
     SELECT test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_add_food;
+CREATE PROCEDURE test_add_food()
+BEGIN
+    DECLARE test_result INT;
+    DECLARE result_failed BOOLEAN;
+    DECLARE result_succeed BOOLEAN;
+
+    START TRANSACTION;
+
+    CALL add_food('tempo', 9, 0, NULL, 3, result_succeed);
+    CALL add_food('some some', 9, 0, NULL, 0, result_failed);
+
+    ROLLBACK;
+
+    SELECT result_failed = FALSE AND result_succeed = TRUE
+    INTO test_result;
+
+    SELECT test_result;
+END;
