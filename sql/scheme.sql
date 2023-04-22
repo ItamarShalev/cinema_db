@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS food
     CHECK ( need_cooling IN (0, 1) AND min_age > 0 AND allergy IN ('nuts', 'milk', 'soy')),
     INDEX idx_fk_food (id),
     CONSTRAINT fk_food FOREIGN KEY (id) REFERENCES product (id)
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
