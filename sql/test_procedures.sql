@@ -215,3 +215,21 @@ BEGIN
 
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_movies_of_date;
+CREATE PROCEDURE test_movies_of_date()
+BEGIN
+    DECLARE expected_result TEXT;
+    DECLARE actual_result TEXT;
+
+    SET expected_result = 'Forrest Gump,The Dark Knight,The Godfather,The Shawshank Redemption';
+
+    CALL movies_of_date('2023-03-06');
+
+    SELECT GROUP_CONCAT(movie_name SEPARATOR ',')
+    INTO actual_result
+    FROM temporary_table_movies_of_today;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
