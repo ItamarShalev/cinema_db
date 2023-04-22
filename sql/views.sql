@@ -107,6 +107,16 @@ CREATE OR REPLACE VIEW view_vip_movies_with_free_seats AS
     ORDER BY screen.screen_time
 );
 
+-- Return all movies screening today.
+CREATE OR REPLACE VIEW view_movies_screened_today AS
+(
+    SELECT screen_time, movie_name
+    FROM movie
+    INNER JOIN screen
+    ON movie.id = screen.movie_id
+    WHERE DATE(screen.screen_time) = CURDATE()
+);
+
 -- Return all VIP movies.
 CREATE OR REPLACE VIEW view_vip_movies AS
 (
