@@ -100,8 +100,8 @@ BEGIN
     CALL get_employee_with_most_products();
 
     SELECT GROUP_CONCAT(
-        CONCAT(id, ',', first_name, ',', last_name, ',', product_count)
-        ORDER BY id SEPARATOR '|')
+                   CONCAT(id, ',', first_name, ',', last_name, ',', product_count)
+                   ORDER BY id SEPARATOR '|')
     INTO actual_result
     FROM temporary_table_employee_with_most_products;
 
@@ -119,8 +119,8 @@ BEGIN
     CALL get_employee_earned_most_money();
 
     SELECT GROUP_CONCAT(
-        CONCAT(id, ',', first_name, ',', last_name, ',', money)
-        ORDER BY id SEPARATOR '|')
+                   CONCAT(id, ',', first_name, ',', last_name, ',', money)
+                   ORDER BY id SEPARATOR '|')
     INTO actual_result
     FROM temporary_table_get_employee_earned_most_money;
 

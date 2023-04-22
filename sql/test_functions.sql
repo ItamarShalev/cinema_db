@@ -95,8 +95,8 @@ BEGIN
     SET has_zeros_sales = IF(0 IN (SELECT sales FROM view_employee_with_sales_money), 1, 0);
 
     SET test_result =  IF(has_zeros_sales = 0
-                          OR actual_result != expected_result
-                          OR actual_result IS NULL, 0, 1);
+                              OR actual_result != expected_result
+                              OR actual_result IS NULL, 0, 1);
 
     RETURN test_result;
 END;
@@ -175,16 +175,21 @@ BEGIN
     DECLARE test_result INT;
 
     SET expected_result = CONCAT('3,The Dark Knight,3,2023-03-06 18:00:00',
-        '|5,Inception,5,2023-03-07 12:00:00|7,The Lion King,7,2023-03-07 18:00:00',
-        '|10,Fight Club,10,2023-03-08 15:00:00|13,The Silence of the Lambs,3,2023-03-09 12:00:00',
-        '|15,The Godfather: Part II,5,2023-03-09 18:00:00',
-        '|17,Schindler''s List,7,2023-03-10 12:00:00|20,The Prestige,10,2023-03-10 21:00:00',
-        '|23,Interstellar,3,2023-03-11 18:00:00|25,Se7en,5,2023-03-12 12:00:00',
-        '|27,The Departed,7,2023-03-12 18:00:00',
-        '|30,Eternal Sunshine of the Spotless Mind,10,2023-03-13 15:00:00');
+                                 '|5,Inception,5,2023-03-07 12:00:00',
+                                 '|7,The Lion King,7,2023-03-07 18:00:00',
+                                 '|10,Fight Club,10,2023-03-08 15:00:00',
+                                 '|13,The Silence of the Lambs,3,2023-03-09 12:00:00',
+                                 '|15,The Godfather: Part II,5,2023-03-09 18:00:00',
+                                 '|17,Schindler''s List,7,2023-03-10 12:00:00',
+                                 '|20,The Prestige,10,2023-03-10 21:00:00',
+                                 '|23,Interstellar,3,2023-03-11 18:00:00',
+                                 '|25,Se7en,5,2023-03-12 12:00:00',
+                                 '|27,The Departed,7,2023-03-12 18:00:00',
+                                 '|30,Eternal Sunshine of the Spotless Mind,10,',
+                                 '2023-03-13 15:00:00');
 
     SELECT GROUP_CONCAT(CONCAT(id, ',', movie_name, ',', room_number, ',', screen_time)
-        ORDER BY id SEPARATOR '|')
+                        ORDER BY id SEPARATOR '|')
     INTO actual_result
     FROM view_vip_movies_with_free_seats;
 
