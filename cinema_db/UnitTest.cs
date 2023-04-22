@@ -231,6 +231,12 @@ namespace cinemaDB
             Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_movies_of_date"));
         }
 
+        [TestMethod]
+        public void TestShortestMovie()
+        {
+            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_shortest_movie"));
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

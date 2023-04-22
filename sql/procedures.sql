@@ -246,3 +246,24 @@ BEGIN
 
     SELECT * FROM temporary_table_movies_of_today;
 END;
+
+-- The shortest movie.
+DROP PROCEDURE IF EXISTS shortest_movie;
+CREATE PROCEDURE shortest_movie()
+BEGIN
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_shortest_movie;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_shortest_movie
+    (
+        id INT,
+        movie_name VARCHAR(50)
+    );
+
+    INSERT INTO temporary_table_shortest_movie
+    SELECT id, movie_name
+    FROM movie
+    WHERE duration_in_minutes = (SELECT MIN(duration_in_minutes) FROM movie);
+
+    SELECT * FROM temporary_table_shortest_movie;
+
+END;

@@ -233,3 +233,20 @@ BEGIN
     DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_shortest_movie;
+CREATE PROCEDURE test_shortest_movie()
+BEGIN
+    DECLARE expected_result TEXT DEFAULT '7,The Lion King';
+    DECLARE actual_result TEXT;
+
+    CALL shortest_movie();
+
+    SELECT GROUP_CONCAT(CONCAT(id, ',', movie_name) ORDER BY id SEPARATOR '|')
+    INTO actual_result
+    FROM temporary_table_shortest_movie;
+
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_shortest_movie;
+
+    SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
+END;
