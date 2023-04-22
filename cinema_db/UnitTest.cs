@@ -47,14 +47,24 @@ namespace cinemaDB
         private void RunExampleProcedureTest(string fileName, string procedureName)
         {
             sqlHelper.ExecuteSqlFile(fileName);
-            bool result = sqlHelper.ExecuteProcedureTest(procedureName);
-            Assert.IsTrue(result);
+            AssertProcedureTest(procedureName);
         }
 
         private void RunExampleFunctionTest(string fileName, string functionName)
         {
             sqlHelper.ExecuteSqlFile(fileName);
+            AssertFunctionTest(functionName);
+        }
+
+        private void AssertFunctionTest(string functionName)
+        {
             bool result = sqlHelper.ExecuteFunctionTest(functionName);
+            Assert.IsTrue(result);
+        }
+
+        private void AssertProcedureTest(string procedureName)
+        {
+            bool result = sqlHelper.ExecuteProcedureTest(procedureName);
             Assert.IsTrue(result);
         }
 
@@ -108,199 +118,199 @@ namespace cinemaDB
         [TestMethod]
         public void TestCountTablesInDatabase()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_count_tables_in_database"));
+            AssertFunctionTest("test_count_tables_in_database");
         }
 
         [TestMethod]
         public void TestMoviesNotForAdult()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_movies_not_for_adults"));
+            AssertFunctionTest("test_movies_not_for_adults");
         }
 
         [TestMethod]
         public void TestEmployeeEarnPerMonth()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_employee_earn_per_month"));
+            AssertFunctionTest("test_employee_earn_per_month");
         }
 
         [TestMethod]
         public void TestEarnPerMonth()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_earn_per_month"));
+            AssertFunctionTest("test_earn_per_month");
         }
 
         [TestMethod]
         public void TestEmployeeWithSalesMoney()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_employee_with_sales_money"));
+            AssertFunctionTest("test_employee_with_sales_money");
         }
 
         [TestMethod]
         public void TestGetProductsUnderPrice()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_get_products_under_price"));
+            AssertProcedureTest("test_get_products_under_price");
         }
 
         [TestMethod]
         public void TestGetEmployeeBirthdayInMonth()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_get_employee_birthday_in_month"));
+            AssertProcedureTest("test_get_employee_birthday_in_month");
         }
 
         [TestMethod]
         public void TestGetFoodThatNeedCooling()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_get_food_that_need_cooling"));
+            AssertProcedureTest("test_get_food_that_need_cooling");
         }
 
         [TestMethod]
         public void TestGetMoviesScreenInTheater()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_get_movies_screen_in_theater"));
+            AssertProcedureTest("test_get_movies_screen_in_theater");
         }
 
         [TestMethod]
         public void TestGetTicketsSoldInScreen()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_get_tickets_sold_in_screen"));
+            AssertProcedureTest("test_get_tickets_sold_in_screen");
         }
 
         [TestMethod]
         public void TestGetEmployeeWithMostProducts()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_get_employee_with_most_products"));
+            AssertProcedureTest("test_get_employee_with_most_products");
         }
 
         [TestMethod]
         public void TestGetEmployeeEarnedMostMoney()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_get_employee_earned_most_money"));
+            AssertProcedureTest("test_get_employee_earned_most_money");
         }
 
         [TestMethod]
         public void TestEmployeeWithAmountProducts()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_employee_with_amount_products"));
+            AssertFunctionTest("test_employee_with_amount_products");
         }
 
         [TestMethod]
         public void TestGetMoneyEarnedInMonth()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_get_money_earned_in_month"));
+            AssertFunctionTest("test_get_money_earned_in_month");
         }
 
         [TestMethod]
         public void TestGetMoneyEarnedInYear()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_get_money_earned_in_year"));
+            AssertFunctionTest("test_get_money_earned_in_year");
         }
 
         [TestMethod]
         public void TestVipMoviesWithFreeSeats()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_vip_movies_with_free_seats"));
+            AssertFunctionTest("test_vip_movies_with_free_seats");
         }
 
         [TestMethod]
         public void TestRemoveScreenIfNoTickets()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_remove_screen_if_no_tickets"));
+            AssertProcedureTest("test_remove_screen_if_no_tickets");
         }
 
         [TestMethod]
         public void TestUpdateManagerToDepartment()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_update_manager_to_department"));
+            AssertProcedureTest("test_update_manager_to_department");
         }
 
         [TestMethod]
         public void TestDeleteUselessEmployees()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_delete_useless_employees"));
+            AssertProcedureTest("test_delete_useless_employees");
         }
 
         [TestMethod]
         public void TestDepartmentWorkers()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_department_workers"));
+            AssertProcedureTest("test_department_workers");
         }
 
         [TestMethod]
         public void TestMoviesOfDate()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_movies_of_date"));
+            AssertProcedureTest("test_movies_of_date");
         }
 
         [TestMethod]
         public void TestShortestMovie()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_shortest_movie"));
+            AssertProcedureTest("test_shortest_movie");
         }
 
         [TestMethod]
         public void TestFoodForToddlers()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_food_for_toddlers"));
+            AssertProcedureTest("test_food_for_toddlers");
         }
 
         [TestMethod]
         public void TestTicketsForScreen()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_tickets_for_screen"));
+            AssertProcedureTest("test_tickets_for_screen");
         }
 
         [TestMethod]
         public void TestCustomerBoughtCertainCost()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_customers_that_bought_in_certain_cost"));
+            AssertProcedureTest("test_customers_that_bought_in_certain_cost");
         }
 
         [TestMethod]
         public void TestScreenNotInTheater()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_screens_not_in_theater"));
+            AssertProcedureTest("test_screens_not_in_theater");
         }
 
         [TestMethod]
         public void TestViewVipMovies()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_view_vip_movies"));
+            AssertFunctionTest("test_view_vip_movies");
         }
 
         [TestMethod]
         public void TestViewFoodContainsDairy()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_view_food_contains_dairy"));
+            AssertFunctionTest("test_view_food_contains_dairy");
         }
 
         [TestMethod]
         public void TestViewNonDairyFood()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_view_non_dairy_food"));
+            AssertFunctionTest("test_view_non_dairy_food");
         }
 
         [TestMethod]
         public void TestViewEmployeeThatSold()
         {
-            Assert.IsTrue(sqlHelper.ExecuteFunctionTest("test_view_employee_that_sold"));
+            AssertFunctionTest("test_view_employee_that_sold");
         }
 
         [TestMethod]
         public void TestDeleteFood()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_delete_food"));
+            AssertProcedureTest("test_delete_food");
         }
 
         [TestMethod]
         public void TestAddFood()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_add_food"));
+            AssertProcedureTest("test_add_food");
         }
 
         [TestMethod]
         public void TestAddEmployee()
         {
-            Assert.IsTrue(sqlHelper.ExecuteProcedureTest("test_add_employee"));
+            AssertProcedureTest("test_add_employee");
         }
 
         protected virtual void Dispose(bool disposing)
