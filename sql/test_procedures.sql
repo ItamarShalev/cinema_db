@@ -342,3 +342,23 @@ BEGIN
     DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
     SELECT IF(actual_result != expected_result OR actual_result IS NULL, 0, 1) AS test_result;
 END;
+
+DROP PROCEDURE IF EXISTS test_delete_food;
+CREATE PROCEDURE test_delete_food()
+BEGIN
+    DECLARE test_result INT;
+    DECLARE result_failed BOOLEAN;
+    DECLARE result_succeed BOOLEAN;
+
+    START TRANSACTION;
+
+    CALL delete_food(4, result_succeed);
+    CALL delete_food(100, result_failed);
+
+    ROLLBACK;
+
+    SELECT result_failed = FALSE AND result_succeed = TRUE
+    INTO test_result;
+
+    SELECT test_result;
+END;

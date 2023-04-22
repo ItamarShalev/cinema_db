@@ -359,3 +359,22 @@ BEGIN
 
     SELECT * FROM temporary_table_screens_not_in_thetaer;
 END;
+
+-- Delete certain food that we stopped selling.
+DROP PROCEDURE IF EXISTS delete_food;
+CREATE PROCEDURE delete_food(IN id INT, OUT succeed BOOLEAN)
+BEGIN
+    DECLARE product_count INT;
+    DECLARE food_count INT;
+
+    SELECT COUNT(*) INTO product_count FROM product WHERE product.id = id;
+    SELECT COUNT(*) INTO food_count FROM food WHERE food.id = id;
+
+    IF product_count = 0 OR food_count = 0 THEN
+        SET succeed = 0;
+    ELSE
+        DELETE FROM food WHERE food.id = id;
+        DELETE FROM product WHERE product.id = id;
+        SET succeed = 1;
+    END IF;
+END;
