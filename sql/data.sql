@@ -117,12 +117,12 @@ VALUES ('John Smith', '1995-03-21'),
        ('Benjamin Powell', '2000-03-12');
 
 -- Department insertion of data, we use 5 different departments.
-INSERT INTO department (department_name, manager_id)
-VALUES ('Ticket Sales', NULL),
-       ('Returns', NULL),
-       ('Usher', NULL),
-       ('Food Sales', NULL),
-       ('Customer Service', NULL);
+INSERT INTO department (department_name, department_type, manager_id)
+VALUES ('Ticket Sales', 'Sales', NULL),
+       ('Returns', 'Service', NULL),
+       ('Usher', 'Service', NULL),
+       ('Food Sales', 'Sales', NULL),
+       ('Customer Service', 'Service', NULL);
 
 -- Employee insertion of data, 30 new employees.
 INSERT INTO employee (first_name, last_name, date_of_birth, department_id)

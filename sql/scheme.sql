@@ -48,10 +48,12 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE TABLE IF NOT EXISTS department
 (
     id              INT          NOT NULL AUTO_INCREMENT,
+    department_type            VARCHAR(50)  NOT NULL,
     department_name VARCHAR(100) NOT NULL UNIQUE,
     manager_id      INT,
     UNIQUE (department_name, manager_id),
     PRIMARY KEY (id),
+    CHECK (department_type IN ('Security', 'Movie', 'Sales', 'Buffet', 'Cleaning', 'Service')),
     INDEX idx_fk_department (manager_id),
     CONSTRAINT fk_department FOREIGN KEY (manager_id) REFERENCES employee (id)
         ON DELETE NO ACTION
@@ -59,8 +61,8 @@ CREATE TABLE IF NOT EXISTS department
     INDEX idx_fk_department_manager (manager_id, id),
     CONSTRAINT fk_department_manager
         FOREIGN KEY (manager_id, id) REFERENCES employee (id, department_id)
-        ON DELETE NO ACTION
-        ON UPDATE CASCADE
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS employee
