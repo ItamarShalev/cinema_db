@@ -165,3 +165,92 @@ CREATE TABLE IF NOT EXISTS sell
         ON DELETE NO ACTION
         ON UPDATE CASCADE
 );
+
+CREATE TABLE branch
+(
+    id                    INT NOT NULL AUTO_INCREMENT,
+    city                  VARCHAR(50) NOT NULL,
+    street                VARCHAR(50) NOT NULL,
+    address               VARCHAR(10) NOT NULL,
+    date_of_establishment DATE NOT NULL,
+    manager_id            INT NOT NULL,
+    PRIMARY KEY (id),
+    INDEX idx_fk_employee_branch (manager_id),
+    CONSTRAINT fk_employee_branch FOREIGN KEY (manager_id) REFERENCES employee (id)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+);
+
+CREATE PROCEDURE validate_not_department_manager(IN manager_id_param INT)
+BEGIN
+    DECLARE is_department_manager BOOLEAN DEFAULT 0;
+    DECLARE manager_id_str VARCHAR(50);
+    DECLARE error_message VARCHAR(255);
+
+    SELECT manager_id_param IN (SELECT manager_id FROM department)
+    INTO is_department_manager;
+
+    IF is_department_manager THEN
+        SET manager_id_str = (SELECT CAST(manager_id_param AS CHAR));
+        SET error_message = CONCAT('Manager ID does not exist as a manager in the department. '
+                                   'Manager ID: ', manager_id_str);
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = error_message;
+    END IF;
+END;
+
+CREATE PROCEDURE validate_not_branch_manager(IN manager_id_param INT)
+BEGIN
+    DECLARE is_branch_manager BOOLEAN DEFAULT 0;
+    DECLARE manager_id_str VARCHAR(50);
+    DECLARE error_message VARCHAR(255);
+
+    SELECT manager_id_param IN (SELECT manager_id FROM department)
+    INTO is_branch_manager;
+
+    IF is_branch_manager THEN
+        SET manager_id_str = (SELECT CAST(manager_id_param AS CHAR));
+        SET error_message = CONCAT('Manager ID does not exist as a manager in the branch. '
+                                   'Manager ID: ', manager_id_str);
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = error_message;
+    END IF;
+END;
+
+CREATE TRIGGER check_insert_manager_not_department_manager
+    BEFORE INSERT ON branch
+    FOR EACH ROW
+BEGIN
+    DECLARE manager_id INT;
+    SET manager_id = new.manager_id;
+    CALL validate_not_branch_manager(manager_id);
+END;
+
+CREATE TRIGGER check_update_manager_not_department_manager
+    BEFORE INSERT ON branch
+    FOR EACH ROW
+BEGIN
+    DECLARE manager_id INT;
+    SET manager_id = new.manager_id;
+    CALL validate_not_branch_manager(manager_id);
+END;
+
+
+
+CREATE TRIGGER check_insert_manager_not_branch_manager
+    BEFORE INSERT ON department
+    FOR EACH ROW
+BEGIN
+    DECLARE manager_id INT;
+    SET manager_id = new.manager_id;
+    CALL validate_not_branch_manager(manager_id);
+END;
+
+CREATE TRIGGER check_update_manager_not_branch_manager
+    BEFORE INSERT ON department
+    FOR EACH ROW
+BEGIN
+    DECLARE manager_id INT;
+    SET manager_id = new.manager_id;
+    CALL validate_not_branch_manager(manager_id);
+END;

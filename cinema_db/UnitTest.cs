@@ -32,6 +32,7 @@ namespace cinemaDB
             sqlHelper.ExecuteSqlFile("scheme.sql");
             sqlHelper.ExecuteSqlFile("views.sql");
             sqlHelper.ExecuteSqlFile("data.sql");
+            sqlHelper.ExecuteSqlFile("additional_data.sql");
             sqlHelper.ExecuteSqlFile("procedures.sql");
             sqlHelper.ExecuteSqlFile("functions.sql");
             sqlHelper.ExecuteSqlFile("test_procedures.sql");
