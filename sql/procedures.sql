@@ -405,8 +405,13 @@ END;
 
 -- Add new employee.
 DROP PROCEDURE IF EXISTS add_employee;
-CREATE PROCEDURE add_employee(IN param_first_name VARCHAR(255), IN param_last_name VARCHAR(255),
-                              IN param_date_of_birth DATE, IN param_department INT,
+CREATE PROCEDURE add_employee(IN param_first_name VARCHAR(255),
+                              IN param_last_name VARCHAR(255),
+                              IN param_date_of_birth DATE,
+                              IN param_department INT,
+                              IN param_date_of_hiring DATE,
+                              IN param_salary FLOAT,
+                              IN param_rating INT,
                               OUT succeed BOOLEAN)
 BEGIN
     IF NOT EXISTS(SELECT * FROM department WHERE id = param_department)
@@ -427,8 +432,10 @@ BEGIN
                 AND date_of_birth = param_date_of_birth) THEN
         SET succeed = 0;
     ELSE
-        INSERT INTO employee(first_name, last_name, date_of_birth, department_id)
-        VALUES (param_first_name, param_last_name, param_date_of_birth, param_department);
+        INSERT INTO employee(first_name, last_name, date_of_birth, department_id, date_of_hiring,
+                             salary, rating)
+        VALUES (param_first_name, param_last_name, param_date_of_birth, param_department,
+                param_date_of_hiring, param_salary, param_rating);
         SET succeed = 1;
     END IF;
 END;

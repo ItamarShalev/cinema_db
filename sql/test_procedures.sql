@@ -392,8 +392,8 @@ BEGIN
 
     START TRANSACTION;
 
-    CALL add_employee('ron','shaull', '1993-03-11', 2, result_succeed);
-    CALL add_employee('ron','shaull', '1993-03-11', 45, result_failed);
+    CALL add_employee('ron','shaull', '1993-03-11', 2, '1998-03-11', 90.3, 80, result_succeed);
+    CALL add_employee('ron','shaull', '1993-03-11', 45, '1998-03-11', 90.3, 80, result_failed);
 
     ROLLBACK;
 
