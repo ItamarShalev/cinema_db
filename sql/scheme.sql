@@ -199,6 +199,13 @@ CREATE TABLE shift
         ON UPDATE CASCADE
 );
 
+ALTER TABLE department
+    ADD COLUMN branch_id INT,
+    ADD CONSTRAINT fk_department_branch
+        FOREIGN KEY (branch_id) REFERENCES branch (id)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE;
+
 CREATE PROCEDURE validate_not_department_manager(IN manager_id_param INT)
 BEGIN
     DECLARE is_department_manager BOOLEAN DEFAULT 0;
