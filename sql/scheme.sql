@@ -181,6 +181,24 @@ CREATE TABLE branch
         ON UPDATE CASCADE
 );
 
+CREATE TABLE shift
+(
+    id            INT NOT NULL AUTO_INCREMENT,
+    start_time    INT NOT NULL,
+    end_time      INT NOT NULL,
+    department_id INT NOT NULL,
+    branch_id     INT NOT NULL,
+    PRIMARY KEY (id, department_id, branch_id),
+    INDEX idx_fk_department_shift (department_id),
+    CONSTRAINT fk_department_shift FOREIGN KEY (department_id) REFERENCES department (id)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE,
+    INDEX idx_fk_branch_shift (branch_id),
+    CONSTRAINT fk_branch_shift FOREIGN KEY (branch_id) REFERENCES branch (id)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+);
+
 CREATE PROCEDURE validate_not_department_manager(IN manager_id_param INT)
 BEGIN
     DECLARE is_department_manager BOOLEAN DEFAULT 0;

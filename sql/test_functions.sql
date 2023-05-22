@@ -5,7 +5,7 @@ CREATE FUNCTION test_count_tables_in_database()
     RETURNS INT
     DETERMINISTIC
 BEGIN
-    DECLARE excepted_result INT DEFAULT 11;
+    DECLARE excepted_result INT DEFAULT 12;
     DECLARE actual_result INT;
     DECLARE test_result INT;
 
