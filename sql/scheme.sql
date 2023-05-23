@@ -199,6 +199,20 @@ CREATE TABLE shift
         ON UPDATE CASCADE
 );
 
+CREATE TABLE shift_employee
+(
+    employee_id INT NOT NULL,
+    shift_id    INT NOT NULL,
+    INDEX idx_fk_shift_employee_id (employee_id),
+    CONSTRAINT fk_shift_employee_id FOREIGN KEY (employee_id) REFERENCES employee (id)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE,
+    INDEX idx_fk_shift_id_employee (shift_id),
+    CONSTRAINT fk_shift_id_employee FOREIGN KEY (shift_id) REFERENCES shift (id)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+);
+
 ALTER TABLE department
     ADD COLUMN branch_id INT,
     ADD CONSTRAINT fk_department_branch
