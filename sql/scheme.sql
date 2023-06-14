@@ -48,7 +48,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE TABLE IF NOT EXISTS department
 (
     id              INT          NOT NULL AUTO_INCREMENT,
-    department_type            VARCHAR(50)  NOT NULL,
+    department_type VARCHAR(50)  NOT NULL,
     department_name VARCHAR(100) NOT NULL UNIQUE,
     manager_id      INT,
     UNIQUE (department_name, manager_id),
@@ -67,15 +67,15 @@ CREATE TABLE IF NOT EXISTS department
 
 CREATE TABLE IF NOT EXISTS employee
 (
-    id            INT         NOT NULL AUTO_INCREMENT,
-    first_name    VARCHAR(50) NOT NULL,
-    last_name     VARCHAR(50) NOT NULL,
-    date_of_birth DATE        NOT NULL,
-    department_id INT         NOT NULL,
-    still_active  TINYINT     NOT NULL DEFAULT 1,
-    date_of_hiring DATE NOT NULL,
-    salary         FLOAT NOT NULL,
-    rating         INT DEFAULT 80,
+    id             INT         NOT NULL AUTO_INCREMENT,
+    first_name     VARCHAR(50) NOT NULL,
+    last_name      VARCHAR(50) NOT NULL,
+    date_of_birth  DATE        NOT NULL,
+    department_id  INT         NOT NULL,
+    still_active   TINYINT     NOT NULL DEFAULT 1,
+    date_of_hiring DATE        NOT NULL,
+    salary         FLOAT       NOT NULL,
+    rating         INT                  DEFAULT 80,
     UNIQUE (first_name, last_name, date_of_birth),
     CHECK (still_active IN (0, 1) AND date_of_hiring > date_of_birth AND salary > 0 AND rating > 0),
     PRIMARY KEY (id),
@@ -141,11 +141,11 @@ CREATE TABLE IF NOT EXISTS ticket
 
 CREATE TABLE IF NOT EXISTS sell
 (
-    employee_id        INT      NOT NULL,
-    customer_id        INT      NOT NULL,
-    product_id         INT      NOT NULL,
-    ticket_id          INT      UNIQUE,
-    sell_time          DATETIME NOT NULL,
+    employee_id INT      NOT NULL,
+    customer_id INT      NOT NULL,
+    product_id  INT      NOT NULL,
+    ticket_id   INT UNIQUE,
+    sell_time   DATETIME NOT NULL,
     UNIQUE (employee_id, customer_id, product_id, sell_time),
     PRIMARY KEY (employee_id, customer_id, product_id, sell_time),
     INDEX idx_fk_sell_employee (employee_id),
@@ -168,12 +168,12 @@ CREATE TABLE IF NOT EXISTS sell
 
 CREATE TABLE branch
 (
-    id                    INT NOT NULL AUTO_INCREMENT,
+    id                    INT         NOT NULL AUTO_INCREMENT,
     city                  VARCHAR(50) NOT NULL,
     street                VARCHAR(50) NOT NULL,
     address               VARCHAR(10) NOT NULL,
-    date_of_establishment DATE NOT NULL,
-    manager_id            INT NOT NULL,
+    date_of_establishment DATE        NOT NULL,
+    manager_id            INT         NOT NULL,
     PRIMARY KEY (id),
     INDEX idx_fk_employee_branch (manager_id),
     CONSTRAINT fk_employee_branch FOREIGN KEY (manager_id) REFERENCES employee (id)
@@ -183,11 +183,12 @@ CREATE TABLE branch
 
 CREATE TABLE shift
 (
-    id            INT NOT NULL AUTO_INCREMENT,
-    start_time    INT NOT NULL,
-    end_time      INT NOT NULL,
-    department_id INT NOT NULL,
-    branch_id     INT NOT NULL,
+    id            INT  NOT NULL AUTO_INCREMENT,
+    start_time    TIME NOT NULL,
+    end_time      TIME NOT NULL,
+    department_id INT  NOT NULL,
+    branch_id     INT  NOT NULL,
+    shift_date          DATE NOT NULL,
     PRIMARY KEY (id, department_id, branch_id),
     INDEX idx_fk_department_shift (department_id),
     CONSTRAINT fk_department_shift FOREIGN KEY (department_id) REFERENCES department (id)
@@ -232,7 +233,7 @@ BEGIN
     IF is_department_manager THEN
         SET manager_id_str = (SELECT CAST(manager_id_param AS CHAR));
         SET error_message = CONCAT('Manager ID does not exist as a manager in the department. '
-                                   'Manager ID: ', manager_id_str);
+                                       'Manager ID: ', manager_id_str);
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = error_message;
     END IF;
@@ -250,14 +251,15 @@ BEGIN
     IF is_branch_manager THEN
         SET manager_id_str = (SELECT CAST(manager_id_param AS CHAR));
         SET error_message = CONCAT('Manager ID does not exist as a manager in the branch. '
-                                   'Manager ID: ', manager_id_str);
+                                       'Manager ID: ', manager_id_str);
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = error_message;
     END IF;
 END;
 
 CREATE TRIGGER check_insert_manager_not_department_manager
-    BEFORE INSERT ON branch
+    BEFORE INSERT
+    ON branch
     FOR EACH ROW
 BEGIN
     DECLARE manager_id INT;
@@ -266,7 +268,8 @@ BEGIN
 END;
 
 CREATE TRIGGER check_update_manager_not_department_manager
-    BEFORE INSERT ON branch
+    BEFORE INSERT
+    ON branch
     FOR EACH ROW
 BEGIN
     DECLARE manager_id INT;
@@ -277,7 +280,8 @@ END;
 
 
 CREATE TRIGGER check_insert_manager_not_branch_manager
-    BEFORE INSERT ON department
+    BEFORE INSERT
+    ON department
     FOR EACH ROW
 BEGIN
     DECLARE manager_id INT;
@@ -286,7 +290,8 @@ BEGIN
 END;
 
 CREATE TRIGGER check_update_manager_not_branch_manager
-    BEFORE INSERT ON department
+    BEFORE INSERT
+    ON department
     FOR EACH ROW
 BEGIN
     DECLARE manager_id INT;
