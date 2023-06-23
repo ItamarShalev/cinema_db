@@ -12,7 +12,7 @@ BEGIN
     INTO count_tables
     FROM information_schema.tables
     WHERE table_schema = DATABASE()
-    AND table_type = 'BASE TABLE';
+      AND table_type = 'BASE TABLE';
 
     RETURN count_tables;
 END;
@@ -27,7 +27,8 @@ BEGIN
     SELECT COALESCE(SUM(sales), 0)
     INTO result
     FROM view_earn_per_month
-    WHERE at_year = param_year AND at_month = param_month;
+    WHERE at_year = param_year
+      AND at_month = param_month;
 
     RETURN result;
 END;
@@ -45,4 +46,28 @@ BEGIN
     WHERE at_year = param_year;
 
     RETURN result;
+END;
+
+DROP PROCEDURE IF EXISTS get_employee;
+CREATE PROCEDURE get_employee(IN employee_id INT)
+BEGIN
+    SELECT * FROM employee WHERE id = employee_id;
+END;
+
+DROP PROCEDURE IF EXISTS delete_employee;
+CREATE PROCEDURE delete_employee(IN param_id INT, OUT succeed BOOLEAN)
+BEGIN
+    IF NOT EXISTS(SELECT *
+                  FROM employee
+                  WHERE employee.ID = param_id)
+    THEN
+        SET succeed = 0;
+        SELECT 'Error';
+    ELSE
+        -- Delete an employee
+        UPDATE employee
+        SET still_active = 0
+        WHERE param_id = id;
+        SET succeed = 1;
+    END IF;
 END;

@@ -51,7 +51,7 @@ BEGIN
     INSERT INTO temporary_table_food_that_need_cooling
     SELECT product.id, product.product_name AS food_name
     FROM product
-    NATURAL JOIN food
+             NATURAL JOIN food
     WHERE food.need_cooling = TRUE;
 
     SELECT * FROM temporary_table_food_that_need_cooling;
@@ -70,8 +70,8 @@ BEGIN
     INSERT INTO temporary_table_movies_screen_in_theater
     SELECT movie.id, movie.movie_name
     FROM movie
-    INNER JOIN screen
-    ON movie.id = screen.movie_id
+             INNER JOIN screen
+                        ON movie.id = screen.movie_id
     WHERE screen.room_number = param_room_number;
 
     SELECT * FROM temporary_table_movies_screen_in_theater;
@@ -88,10 +88,11 @@ BEGIN
 
     INSERT INTO temporary_table_tickets_sold_in_screen
     SELECT ticket.seat_number
-    FROM ticket INNER JOIN sell
-    ON ticket.id = sell.ticket_id
+    FROM ticket
+             INNER JOIN sell
+                        ON ticket.id = sell.ticket_id
     WHERE ticket.screen_time = param_screen_time
-    AND ticket.room_number = param_room_number;
+      AND ticket.room_number = param_room_number;
 
     SELECT * FROM temporary_table_tickets_sold_in_screen;
 END;
@@ -122,10 +123,10 @@ BEGIN
     DROP TEMPORARY TABLE IF EXISTS temporary_table_get_employee_earned_most_money;
     CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_get_employee_earned_most_money
     (
-        id            INT,
-        first_name    VARCHAR(255),
-        last_name     VARCHAR(255),
-        money INT
+        id         INT,
+        first_name VARCHAR(255),
+        last_name  VARCHAR(255),
+        money      INT
     );
 
     INSERT INTO temporary_table_get_employee_earned_most_money
@@ -150,12 +151,15 @@ CREATE PROCEDURE remove_screen_if_no_tickets(
     IN param_screen_time DATETIME,
     OUT succeed BOOLEAN)
 BEGIN
-    DELETE FROM screen
-    WHERE room_number = param_room_number AND screen_time = param_screen_time
-    AND NOT EXISTS(SELECT ticket.id
-                   FROM ticket
-                   WHERE room_number = param_room_number AND screen_time = param_screen_time
-                   AND ticket.id IN (SELECT ticket_id FROM sell WHERE ticket_id IS NOT NULL));
+    DELETE
+    FROM screen
+    WHERE room_number = param_room_number
+      AND screen_time = param_screen_time
+      AND NOT EXISTS(SELECT ticket.id
+                     FROM ticket
+                     WHERE room_number = param_room_number
+                       AND screen_time = param_screen_time
+                       AND ticket.id IN (SELECT ticket_id FROM sell WHERE ticket_id IS NOT NULL));
 
     SELECT ROW_COUNT() > 0
     INTO succeed;
@@ -178,7 +182,7 @@ BEGIN
 
     IF param_manager_id IN (SELECT manager_id FROM department WHERE id != param_department_id) THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'The manager is already manager in different department.';
+            SET MESSAGE_TEXT = 'The manager is already manager in different department.';
     END IF;
 
     START TRANSACTION;
@@ -190,7 +194,6 @@ BEGIN
     UPDATE department
     SET manager_id = param_manager_id
     WHERE id = param_department_id;
-
     COMMIT;
 
     SET succeed = TRUE;
@@ -201,7 +204,8 @@ DROP PROCEDURE IF EXISTS delete_useless_employees;
 CREATE PROCEDURE delete_useless_employees()
 BEGIN
     -- Delete all employees that didn't sell any item and they are not managers
-    DELETE FROM employee
+    DELETE
+    FROM employee
     WHERE id NOT IN (SELECT employee_id FROM sell)
       AND id NOT IN (SELECT manager_id FROM department)
       AND id NOT IN (SELECT manager_id FROM branch);
@@ -234,15 +238,16 @@ BEGIN
     DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
     CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_movies_of_today
     (
+        id          INT,
         screen_time DATETIME,
         movie_name  VARCHAR(255)
     );
 
     INSERT INTO temporary_table_movies_of_today
-    SELECT screen_time, movie_name
+    SELECT id, screen_time, movie_name
     FROM movie
-    INNER JOIN screen
-    ON movie.id = screen.movie_id
+             INNER JOIN screen
+                        ON movie.id = screen.movie_id
     WHERE DATE(screen.screen_time) = param_date;
 
     SELECT * FROM temporary_table_movies_of_today;
@@ -256,7 +261,7 @@ BEGIN
     DROP TEMPORARY TABLE IF EXISTS temporary_table_shortest_movie;
     CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_shortest_movie
     (
-        id INT,
+        id         INT,
         movie_name VARCHAR(50)
     );
 
@@ -283,8 +288,8 @@ BEGIN
     INSERT INTO temporary_table_food_for_toddlers
     SELECT price, product_name
     FROM food
-    INNER JOIN product
-    ON food.id = product.id
+             INNER JOIN product
+                        ON food.id = product.id
     WHERE food.min_age <= param_min_age;
 
     SELECT * FROM temporary_table_food_for_toddlers;
@@ -304,12 +309,12 @@ BEGIN
     INSERT INTO temporary_table_tickets_for_screen
     SELECT ticket.id, ticket.seat_number
     FROM ticket
-    INNER JOIN screen
-    INNER JOIN theater
-    INNER JOIN movie
-    ON screen.movie_id = movie.id
-        AND screen.room_number = theater.room_number
-        AND ticket.room_number = screen.room_number
+             INNER JOIN screen
+             INNER JOIN theater
+             INNER JOIN movie
+                        ON screen.movie_id = movie.id
+                            AND screen.room_number = theater.room_number
+                            AND ticket.room_number = screen.room_number
     WHERE ticket.screen_time = param_screen_time
       AND screen.screen_time = param_screen_time
       AND movie.movie_name = param_movie_name
@@ -333,8 +338,9 @@ BEGIN
     INSERT INTO temporary_table_customers_that_bought_in_certain_cost
     SELECT DISTINCT customer_name
     FROM customer
-    INNER JOIN sell INNER JOIN product
-    ON sell.product_id = product.id AND customer.id = sell.customer_id
+             INNER JOIN sell
+             INNER JOIN product
+                        ON sell.product_id = product.id AND customer.id = sell.customer_id
     WHERE product.price >= param_cost;
 
     SELECT * FROM temporary_table_customers_that_bought_in_certain_cost;
@@ -354,8 +360,9 @@ BEGIN
     INSERT INTO temporary_table_screens_not_in_thetaer
     SELECT screen_time, movie_name
     FROM screen
-    INNER JOIN theater INNER JOIN movie
-    ON screen.room_number = theater.room_number AND screen.movie_id = movie.id
+             INNER JOIN theater
+             INNER JOIN movie
+                        ON screen.room_number = theater.room_number AND screen.movie_id = movie.id
     WHERE screen.room_number != param_room;
 
     SELECT * FROM temporary_table_screens_not_in_thetaer;
@@ -383,12 +390,12 @@ END;
 -- Add new food for sale.
 DROP PROCEDURE IF EXISTS add_food;
 CREATE PROCEDURE add_food(
-IN param_name VARCHAR(255),
-IN param_cost INT,
-IN param_need_cooling TINYINT,
-IN param_allegry VARCHAR(10),
-IN param_min_age INT,
-OUT succeed BOOLEAN)
+    IN param_name VARCHAR(255),
+    IN param_cost INT,
+    IN param_need_cooling TINYINT,
+    IN param_allegry VARCHAR(10),
+    IN param_min_age INT,
+    OUT succeed BOOLEAN)
 
 BEGIN
     IF NOT EXISTS(SELECT * FROM product WHERE product_name = param_name)
@@ -437,6 +444,156 @@ BEGIN
                              salary, rating)
         VALUES (param_first_name, param_last_name, param_date_of_birth, param_department,
                 param_date_of_hiring, param_salary, param_rating);
+        SET succeed = 1;
+    END IF;
+END;
+
+-- Adds a sell to sell list, used for both ticket and food.
+DROP PROCEDURE IF EXISTS add_sell;
+CREATE PROCEDURE add_sell(IN param_customer_id INT,
+                          IN param_customer_name VARCHAR(255),
+                          IN param_date_of_birth DATE,
+                          IN param_employee_id INT,
+                          IN param_product_id INT,
+                          IN param_ticket_id INT,
+                          OUT succeed BOOLEAN)
+BEGIN
+    IF NOT EXISTS(SELECT *
+                  FROM customer
+                  WHERE param_customer_name = customer.customer_name
+                    AND param_date_of_birth = customer.date_of_birth
+                    AND param_employee_id = customer.id)
+        OR NOT EXISTS(SELECT *
+                      FROM employee
+                      WHERE param_employee_id = employee.id)
+        OR NOT EXISTS(SELECT *
+                      FROM product
+                      WHERE param_product_id = product.id)
+    THEN
+        SET succeed = 0;
+        SELECT 'Error';
+    END IF;
+    IF param_ticket_id < 0
+    THEN
+        IF param_product_id = 16 OR param_product_id = 17
+            OR NOT EXISTS(SELECT *
+                          FROM employee
+                          WHERE employee.id = param_employee_id
+                            AND employee.department_id = 4)
+        THEN
+            SET succeed = 0;
+            SELECT 'Error';
+        ELSE
+            INSERT INTO sell(employee_id, customer_id, product_id, ticket_id, sell_time)
+            VALUES (param_employee_id, param_customer_id, param_product_id, NULL, NOW());
+            SET succeed = 1;
+        END IF;
+    ELSE
+        IF NOT EXISTS(SELECT *
+                      FROM employee
+                      WHERE employee.id = param_employee_id
+                        AND employee.department_id = 1)
+        THEN
+            SET succeed = 0;
+            SELECT 'Error';
+        ELSE
+            INSERT INTO sell(employee_id, customer_id, product_id, ticket_id, sell_time)
+            VALUES (param_employee_id, param_customer_id, param_product_id, param_ticket_id,
+                    NOW());
+            SET succeed = 1;
+        END IF;
+    END IF;
+END;
+
+-- return one row of specific movie.
+DROP PROCEDURE IF EXISTS get_movie_by_id;
+CREATE PROCEDURE get_movie_by_id(IN param_id INT)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movie;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_movie
+    (
+        id                  INT,
+        movie_name          VARCHAR(255),
+        rating              VARCHAR(255),
+        duration_in_minutes INT,
+        screen_time         DATE,
+        room_number         INT
+    );
+
+    INSERT INTO temporary_table_movie
+    SELECT id, movie_name, rating, duration_in_minutes, screen_time, room_number
+    FROM movie
+             INNER JOIN screen
+    WHERE movie.id = screen.movie_id
+      AND movie.id = param_id;
+
+    SELECT * FROM temporary_table_movie;
+END;
+
+-- gets all available tickets to buy (those who were not sold).
+DROP PROCEDURE IF EXISTS get_available_tickets;
+CREATE PROCEDURE get_available_tickets()
+BEGIN
+    SELECT *
+    FROM ticket
+    WHERE ticket.id NOT IN (SELECT sell.ticket_id
+                            FROM sell
+                            WHERE ticket_id IS NOT NULL);
+END;
+
+-- get the employee that worked most shifts.
+DROP PROCEDURE IF EXISTS get_employee_with_most_shifts;
+CREATE PROCEDURE get_employee_with_most_shifts()
+BEGIN
+    SELECT employee_id,
+           COUNT(*) AS shift_count
+    FROM shift_employee
+    GROUP BY employee_id
+    ORDER BY shift_count DESC
+    LIMIT 1;
+END;
+
+-- adds an employee to specific shift.
+DROP PROCEDURE IF EXISTS add_employee_to_shift;
+CREATE PROCEDURE add_employee_to_shift(IN param_employee_id INT,
+                                       IN param_shift_id INT,
+                                       OUT succeed BOOLEAN)
+BEGIN
+    DECLARE already_working_morning_shift INT DEFAULT 0;
+    # there is no shift with that id or no employee with that id.
+    IF NOT EXISTS(SELECT * FROM shift WHERE id = param_shift_id)
+        OR NOT EXISTS(SELECT *
+                      FROM employee
+                      WHERE id = param_employee_id)
+        OR NOT EXISTS( #check to see if department of employee is the same as shift.
+                SELECT *
+                FROM employee e
+                         JOIN shift s
+                WHERE e.id = param_employee_id && e.department_id = s.department_id
+                  AND s.id param_shift_id
+            )
+    THEN
+        SET succeed = 0;
+        SELECT 'Error';
+    END IF;
+
+    SELECT COUNT(*)
+    INTO already_working_morning_shift
+    FROM employee e
+             INNER JOIN shift_employee se on e.id = se.employee_id
+             INNER JOIN shift s on se.shift_id = s.id
+    WHERE e.id = param_employee_id
+      AND s.shift_date = (SELECT shift_date
+                          FROM shift
+                          WHERE shift.id = param_shift_id)
+      AND s.start_time = '08:00:00';
+    IF already_working_morning_shift > 0
+    THEN
+        SET succeed = 0;
+        SELECT 'Error';
+    ELSE
+        INSERT INTO shift_employee(employee_id, shift_id)
+        VALUES (param_employee_id, param_shift_id);
         SET succeed = 1;
     END IF;
 END;

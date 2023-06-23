@@ -19,9 +19,9 @@ using System.Windows.Shapes;
 using Google.Protobuf.WellKnownTypes;
 using MySql.Data.MySqlClient;
 using nsGenericClass;
-using tmp.sub_windows;
+using PF.sub_windows;
 
-namespace tmp
+namespace PF
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -45,19 +45,20 @@ namespace tmp
         public static readonly DependencyProperty allmoviesProperty =
                 DependencyProperty.Register("allmovies", typeof(ObservableCollection<GenericClass>), typeof(MainWindow));
         #endregion
-        SqlHelper SqlHelper;
+        MySqlConnection connection;
         public MainWindow()
         {
             InitializeComponent();
-            SqlHelper = new SqlHelper();
-            string connectionString = "server=localhost;user=admin;database=db_cinema;port=3306;password=9smlDX1u";
+            string password = ""; //Enter your local host password here!
+            string connectionString = "server=localhost;user=admin;database=db_cinema;port=3306;password="+password;
             //MySqlConnection connection = new MySqlConnection(connectionString);
-            MySqlConnection connection = new MySqlConnection(connectionString);
+            connection = new MySqlConnection(connectionString);
             connection.Open();
             MessageBox.Show("connecion established");
             string query = "SELECT * FROM movie;";
             List<GenericClass> allMoviesTable = new List<GenericClass>();
             List<GenericClass> moviesOfToday = new List<GenericClass>();
+            #region init all movies.
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 using (MySqlDataReader reader = command.ExecuteReader())
@@ -78,6 +79,8 @@ namespace tmp
                     // 'tableData' list now contains the content of the table
                 }
             }
+            #endregion
+            #region init todays movies.
             using (connection = new MySqlConnection(connectionString))
             {
                 try
@@ -106,6 +109,7 @@ namespace tmp
                     foreach (DataRow  row in resultTable.Rows)
                     {
                         GenericClass tmp=new GenericClass();
+                        tmp.addValue("ID: " + row["id"].ToString()+" ");
                         tmp.addValue("Movie Name: " + (string)row["movie_name"]);
                         tmp.addValue("Screen Time: " + row["screen_time"].ToString());
                         tmp.addValue("--------------------");
@@ -118,7 +122,7 @@ namespace tmp
                     Console.WriteLine("Error: " + ex.Message);
                 }
             }
-
+            #endregion
             allmovies = new ObservableCollection<GenericClass>(allMoviesTable);
             movies_of_today = new ObservableCollection<GenericClass>(moviesOfToday);
         }
@@ -131,7 +135,7 @@ namespace tmp
         private void Admin_Click(object sender, RoutedEventArgs e)
         {
             //TODO: send database object as argument.
-            WorkersWin workerwindow = new WorkersWin();
+            WorkersWin workerwindow = new WorkersWin(ref connection);
             workerwindow.ShowDialog();
         }
 
@@ -146,7 +150,7 @@ namespace tmp
             }
             else
             {
-                BuyWin buywin = new BuyWin(p);
+                BuyWin buywin = new BuyWin(p, ref connection);
                 buywin.ShowDialog();
             }
 

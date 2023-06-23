@@ -5,16 +5,11 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cinemaDB", "cinema_db\cinemaDB.csproj", "{81E0F08A-27B1-4A52-9A86-443EBD87F926}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PF", "PF\PF.csproj", "{0C199B08-D4A4-41A2-B2D1-7AF02E8FE3F9}"
-	ProjectSection(ProjectDependencies) = postProject
-		{81E0F08A-27B1-4A52-9A86-443EBD87F926} = {81E0F08A-27B1-4A52-9A86-443EBD87F926}
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericClass", "Generic_Calss\GenericClass.csproj", "{71AEF6FD-B19B-4D4C-8FEC-7F2C594CEB56}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BL", "BL\BL.csproj", "{67D4ECB2-5A96-4053-9585-22BEC596EA3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tmp", "tmp\tmp.csproj", "{A8929BE5-E2EB-4B9B-B65E-089033BACFA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PF", "tmp\PF.csproj", "{A8929BE5-E2EB-4B9B-B65E-089033BACFA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,10 +21,6 @@ Global
 		{81E0F08A-27B1-4A52-9A86-443EBD87F926}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81E0F08A-27B1-4A52-9A86-443EBD87F926}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81E0F08A-27B1-4A52-9A86-443EBD87F926}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0C199B08-D4A4-41A2-B2D1-7AF02E8FE3F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C199B08-D4A4-41A2-B2D1-7AF02E8FE3F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C199B08-D4A4-41A2-B2D1-7AF02E8FE3F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C199B08-D4A4-41A2-B2D1-7AF02E8FE3F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{71AEF6FD-B19B-4D4C-8FEC-7F2C594CEB56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{71AEF6FD-B19B-4D4C-8FEC-7F2C594CEB56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71AEF6FD-B19B-4D4C-8FEC-7F2C594CEB56}.Release|Any CPU.ActiveCfg = Release|Any CPU
