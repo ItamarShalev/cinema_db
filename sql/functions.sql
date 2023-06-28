@@ -46,3 +46,9 @@ BEGIN
 
     RETURN result;
 END;
+
+DROP PROCEDURE IF EXISTS get_employee;
+CREATE PROCEDURE get_employee(IN employee_id INT)
+BEGIN
+    SELECT * FROM employee WHERE id = employee_id;
+END;
