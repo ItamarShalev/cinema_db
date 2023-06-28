@@ -529,3 +529,26 @@ BEGIN
 
     SELECT * FROM temporary_table_movie;
 END;
+
+-- Get all available tickets to buy (those who were not sold).
+DROP PROCEDURE IF EXISTS get_available_tickets;
+CREATE PROCEDURE get_available_tickets()
+BEGIN
+    SELECT *
+    FROM ticket
+    WHERE ticket.id NOT IN (SELECT sell.ticket_id
+                            FROM sell
+                            WHERE ticket_id IS NOT NULL);
+END;
+
+-- Get the employee that worked most shifts.
+DROP PROCEDURE IF EXISTS get_employee_with_most_shifts;
+CREATE PROCEDURE get_employee_with_most_shifts()
+BEGIN
+    SELECT employee_id,
+           COUNT(*) AS shift_count
+    FROM shift_employee
+    GROUP BY employee_id
+    ORDER BY shift_count DESC
+    LIMIT 1;
+END;
