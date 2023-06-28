@@ -200,11 +200,17 @@ END;
 DROP PROCEDURE IF EXISTS delete_useless_employees;
 CREATE PROCEDURE delete_useless_employees()
 BEGIN
-    -- Delete all employees that didn't sell any item and they are not managers
+    -- Disable foreign key checks to ignore shift_employee constraints.
+    SET FOREIGN_KEY_CHECKS = 0;
+
+    -- Delete all employees that didn't sell any item and they are not managers.
     DELETE FROM employee
     WHERE id NOT IN (SELECT employee_id FROM sell)
       AND id NOT IN (SELECT manager_id FROM department)
       AND id NOT IN (SELECT manager_id FROM branch);
+
+    -- Re-enable foreign key checks.
+    SET FOREIGN_KEY_CHECKS = 1;
 END;
 
 -- Returns all workers id, and full name from specific department.
