@@ -234,12 +234,13 @@ BEGIN
     DROP TEMPORARY TABLE IF EXISTS temporary_table_movies_of_today;
     CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_movies_of_today
     (
+        id          INT,
         screen_time DATETIME,
         movie_name  VARCHAR(255)
     );
 
     INSERT INTO temporary_table_movies_of_today
-    SELECT screen_time, movie_name
+    SELECT id, screen_time, movie_name
     FROM movie
     INNER JOIN screen
     ON movie.id = screen.movie_id
