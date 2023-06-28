@@ -447,3 +447,60 @@ BEGIN
         SET succeed = 1;
     END IF;
 END;
+
+-- Add sell to sell list, used for both ticket and food.
+DROP PROCEDURE IF EXISTS add_sell;
+CREATE PROCEDURE add_sell(IN param_customer_id INT,
+                          IN param_customer_name VARCHAR(255),
+                          IN param_date_of_birth DATE,
+                          IN param_employee_id INT,
+                          IN param_product_id INT,
+                          IN param_ticket_id INT,
+                          OUT succeed BOOLEAN)
+BEGIN
+    IF NOT EXISTS(SELECT *
+                  FROM customer
+                  WHERE param_customer_name = customer.customer_name
+                    AND param_date_of_birth = customer.date_of_birth
+                    AND param_employee_id = customer.id)
+        OR NOT EXISTS(SELECT *
+                      FROM employee
+                      WHERE param_employee_id = employee.id)
+        OR NOT EXISTS(SELECT *
+                      FROM product
+                      WHERE param_product_id = product.id)
+    THEN
+        SET succeed = 0;
+        SELECT 'Error';
+    END IF;
+    IF param_ticket_id < 0
+    THEN
+        IF param_product_id = 16 OR param_product_id = 17
+            OR NOT EXISTS(SELECT *
+                          FROM employee
+                          WHERE employee.id = param_employee_id
+                            AND employee.department_id = 4)
+        THEN
+            SET succeed = 0;
+            SELECT 'Error';
+        ELSE
+            INSERT INTO sell(employee_id, customer_id, product_id, ticket_id, sell_time)
+            VALUES (param_employee_id, param_customer_id, param_product_id, NULL, NOW());
+            SET succeed = 1;
+        END IF;
+    ELSE
+        IF NOT EXISTS(SELECT *
+                      FROM employee
+                      WHERE employee.id = param_employee_id
+                        AND employee.department_id = 1)
+        THEN
+            SET succeed = 0;
+            SELECT 'Error';
+        ELSE
+            INSERT INTO sell(employee_id, customer_id, product_id, ticket_id, sell_time)
+            VALUES (param_employee_id, param_customer_id, param_product_id, param_ticket_id,
+                    NOW());
+            SET succeed = 1;
+        END IF;
+    END IF;
+END;
