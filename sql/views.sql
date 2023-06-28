@@ -155,3 +155,11 @@ CREATE OR REPLACE VIEW view_employee_that_sold AS
     FROM employee INNER JOIN sell
     ON employee.id = sell.employee_id
 );
+
+-- Return food with its name.
+CREATE OR REPLACE VIEW view_food AS
+(
+    SELECT product.id, product_name, product.price
+    FROM food INNER JOIN product
+    ON food.id = product.id
+);
