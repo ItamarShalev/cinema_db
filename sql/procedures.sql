@@ -552,3 +552,58 @@ BEGIN
     ORDER BY shift_count DESC
     LIMIT 1;
 END;
+
+-- Add an employee to specific shift.
+DROP PROCEDURE IF EXISTS add_employee_to_shift;
+CREATE PROCEDURE add_employee_to_shift(IN param_employee_id INT,
+                                       IN param_shift_id INT,
+                                       OUT succeed BOOLEAN)
+BEGIN
+    DECLARE count_morning_shift_workers INT DEFAULT 0;
+
+    SET succeed = FALSE;
+
+    -- There is no shift with that id or no employee with that id.
+    process_procedure: BEGIN
+    IF NOT EXISTS(SELECT *
+                  FROM shift
+                  WHERE id = param_shift_id)
+       OR NOT EXISTS(SELECT *
+                     FROM employee
+                     WHERE id = param_employee_id)
+       -- Check to see if department of employee is the same as shift.
+       OR NOT EXISTS(SELECT *
+                     FROM employee
+                     INNER JOIN shift
+                     ON employee.id = param_employee_id
+                     AND employee.department_id = shift.department_id
+                     AND shift.id = param_shift_id)
+    THEN
+        SELECT 'Error';
+        LEAVE process_procedure;
+    END IF;
+
+    -- End process_procedure block.
+    END;
+
+    SELECT COUNT(*)
+    INTO count_morning_shift_workers
+    FROM employee AS e
+             INNER JOIN shift_employee AS se
+                 ON e.id = se.employee_id
+             INNER JOIN shift AS s
+                 ON se.shift_id = s.id
+    WHERE e.id = param_employee_id
+      AND s.shift_date = (SELECT shift_date
+                          FROM shift
+                          WHERE shift.id = param_shift_id)
+      AND s.start_time = '08:00:00';
+    IF count_morning_shift_workers > 0
+    THEN
+        SELECT 'Error';
+    ELSE
+        INSERT INTO shift_employee(employee_id, shift_id)
+        VALUES (param_employee_id, param_shift_id);
+        SET succeed = TRUE;
+    END IF;
+END;
