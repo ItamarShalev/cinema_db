@@ -504,3 +504,28 @@ BEGIN
         END IF;
     END IF;
 END;
+
+-- Return one row of specific movie.
+DROP PROCEDURE IF EXISTS get_movie_by_id;
+CREATE PROCEDURE get_movie_by_id(IN param_id INT)
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temporary_table_movie;
+    CREATE TEMPORARY TABLE IF NOT EXISTS temporary_table_movie
+    (
+        id                  INT,
+        movie_name          VARCHAR(255),
+        rating              VARCHAR(255),
+        duration_in_minutes INT,
+        screen_time         DATE,
+        room_number         INT
+    );
+
+    INSERT INTO temporary_table_movie
+    SELECT id, movie_name, rating, duration_in_minutes, screen_time, room_number
+    FROM movie
+             INNER JOIN screen
+    WHERE movie.id = screen.movie_id
+      AND movie.id = param_id;
+
+    SELECT * FROM temporary_table_movie;
+END;
