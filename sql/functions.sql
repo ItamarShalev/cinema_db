@@ -52,3 +52,20 @@ CREATE PROCEDURE get_employee(IN employee_id INT)
 BEGIN
     SELECT * FROM employee WHERE id = employee_id;
 END;
+
+DROP PROCEDURE IF EXISTS delete_employee;
+CREATE PROCEDURE delete_employee(IN param_id INT, OUT succeed BOOLEAN)
+BEGIN
+    IF NOT EXISTS(SELECT *
+                  FROM employee
+                  WHERE employee.id = param_id)
+    THEN
+        SET succeed = FALSE;
+        SELECT 'Error';
+    ELSE
+        UPDATE employee
+        SET still_active = 0
+        WHERE param_id = id;
+        SET succeed = TRUE;
+    END IF;
+END;
