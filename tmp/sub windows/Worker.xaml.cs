@@ -38,6 +38,7 @@ namespace PF.sub_windows
         {
             InitializeComponent();
             connection = _connection;
+            //employee = p;
             try
             {
                 // Create the MySqlCommand object to execute the stored procedure
@@ -86,7 +87,9 @@ namespace PF.sub_windows
                 command.CommandType = CommandType.StoredProcedure;
 
                 // Add input parameter for the date
-                command.Parameters.AddWithValue("@param_id", int.Parse(worker[3..6]));
+                int id2 = 0;
+                Int32.TryParse(Regex.Match(employee.ToString(), @"ID: (\d+)").Groups[1].Value, out id2);
+                command.Parameters.AddWithValue("@param_id", id2);
                 
                 // Add output parameter for "succeed"
                 command.Parameters.Add(new MySqlParameter("@succeed", MySqlDbType.Bit));
@@ -115,8 +118,7 @@ namespace PF.sub_windows
 
                     // Add input parameter for the date
                     int id = 0;
-                    Int32.TryParse((worker.ToString()[4..6]).ToString(), out id);
-                    command.Parameters.AddWithValue("@employee_id", id);
+                    command.Parameters.AddWithValue("@employee_id", id2);
 
                     // Execute the stored procedure
                     command.ExecuteNonQuery();

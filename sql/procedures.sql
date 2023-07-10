@@ -570,7 +570,7 @@ BEGIN
                 FROM employee e
                          JOIN shift s
                 WHERE e.id = param_employee_id && e.department_id = s.department_id
-                  AND s.id param_shift_id
+                  AND s.id = param_shift_id
             )
     THEN
         SET succeed = 0;

@@ -49,7 +49,7 @@ namespace PF
         public MainWindow()
         {
             InitializeComponent();
-            string password = ""; //Enter your local host password here!
+            string password = "9smlDX1u"; //Enter your local host password here!
             string connectionString = "server=localhost;user=admin;database=db_cinema;port=3306;password="+password;
             //MySqlConnection connection = new MySqlConnection(connectionString);
             connection = new MySqlConnection(connectionString);

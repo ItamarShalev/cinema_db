@@ -52,7 +52,10 @@ namespace PF.sub_windows
             string query = "SELECT * FROM employee;";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
-                connection.Open();
+                if (connection.State == ConnectionState.Closed)
+                {
+                    connection.Open();
+                }
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
