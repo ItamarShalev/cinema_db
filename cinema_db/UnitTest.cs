@@ -14,18 +14,8 @@ namespace cinemaDB
         [TestInitialize]
         public void SetUp()
         {
-            string connectionString = "";
-
-            /* Read the server details using Github secrets */
-            string fullSecretFileLocation = FileFinder.FindFile(FileFinder.FindSlnDirectoryLocation(), "secret_mysql_login.txt");
-            using (var streamReader = File.OpenText(fullSecretFileLocation))
-            {
-                string[] lines = streamReader.ReadToEnd().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                Assert.IsNotNull(lines);
-                Assert.AreEqual(lines.Length, 3);
-                connectionString = SqlHelper.GetMySqlConnectionString(host: lines[0], username: lines[1], password: lines[2]);
-            }
-
+            string connectionString = SqlHelper.GetConnectionFromSecretFile();
+            Assert.IsFalse(string.IsNullOrEmpty(connectionString), "Missing secret file or incorrect pattern, check the logs.");
             sqlHelper.OpenDatabaseConnection(connectionString);
             var reader = sqlHelper.ExecuteSqlCode("DROP DATABASE IF EXISTS db_cinema;");
             reader.Close();

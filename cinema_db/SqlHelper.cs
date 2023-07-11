@@ -2,13 +2,42 @@
 using System.Globalization;
 using MySql.Data.MySqlClient;
 
-#pragma warning disable CA2100
+#pragma warning disable CA2100, CA1303
 
 namespace cinemaDB
 {
-    public class SqlHelper: IDisposable
+    public class SqlHelper : IDisposable
     {
         private MySqlConnection? connection;
+        private const string secret_file_name = "secret_mysql_login.txt";
+
+        public static string GetConnectionFromSecretFile()
+        {
+            string connectionString = "";
+            string[] lines;
+
+            /* Read the server details using Github secrets */
+            string fullSecretFileLocation = FileFinder.FindFile(FileFinder.FindSlnDirectoryLocation(), secret_file_name);
+            if (string.IsNullOrEmpty(fullSecretFileLocation))
+            {
+                Console.WriteLine(secret_file_name + " file is missing.");
+                Console.WriteLine("The file should contain the user name and the password.");
+                Console.WriteLine("The pattern is: '<ip>,<user_name>,<password>' for example: 0.0.0.0,admin,admin123.");
+                return "";
+            }
+            using (var streamReader = File.OpenText(fullSecretFileLocation))
+            {
+                lines = streamReader.ReadToEnd().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (lines == null || lines.Length != 3)
+                {
+                    Console.WriteLine("The file should contain the user name and the password.");
+                    Console.WriteLine("The pattern is: '<ip>,<user_name>,<password>' for example: 0.0.0.0,admin,admin123.");
+                    return "";
+                }
+            }
+            connectionString = SqlHelper.GetMySqlConnectionString(host: lines[0], username: lines[1], password: lines[2]);
+            return connectionString;
+        }
 
         public static string GetMySqlConnectionString(string host, string username, string password)
         {
