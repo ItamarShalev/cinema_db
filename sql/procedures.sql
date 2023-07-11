@@ -607,3 +607,14 @@ BEGIN
         SET succeed = TRUE;
     END IF;
 END;
+
+-- Select all the tickets are free to sell..
+DROP PROCEDURE IF EXISTS select_free_tickets;
+CREATE PROCEDURE select_free_tickets()
+BEGIN
+    SELECT *
+    FROM ticket
+    WHERE ticket.id NOT IN (SELECT sell.ticket_id
+                            FROM sell
+                            WHERE ticket_id IS NOT NULL);
+END;
