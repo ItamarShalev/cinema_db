@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gui", "gui\gui.csproj", "{BC1AE8CB-3236-49A4-BB5D-2E5AE958A9D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cinemaDB", "cinema_db\cinemaDB.csproj", "{66587CE3-D8BC-47C2-9A9A-48A703B1265C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BC1AE8CB-3236-49A4-BB5D-2E5AE958A9D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC1AE8CB-3236-49A4-BB5D-2E5AE958A9D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC1AE8CB-3236-49A4-BB5D-2E5AE958A9D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC1AE8CB-3236-49A4-BB5D-2E5AE958A9D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66587CE3-D8BC-47C2-9A9A-48A703B1265C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66587CE3-D8BC-47C2-9A9A-48A703B1265C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66587CE3-D8BC-47C2-9A9A-48A703B1265C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66587CE3-D8BC-47C2-9A9A-48A703B1265C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A2CC6B0D-CDD9-4D24-AC63-E9FA2414DC97}
+	EndGlobalSection
+EndGlobal
