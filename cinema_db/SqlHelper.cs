@@ -157,6 +157,55 @@ namespace cinemaDB
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        public bool ExecuteDMLProcedure(string procedureName, Dictionary<string, Object>? parameters)
+        {
+
+            MySqlCommand command = new MySqlCommand(procedureName, connection);
+            command.CommandType = CommandType.StoredProcedure;
+
+            /* Set the parameter values if there is any. */
+            if (parameters != null)
+            {
+                foreach (var item in parameters)
+                {
+                    command.Parameters.AddWithValue($"@{item.Key}", item.Value);
+                }
+
+            }
+
+            /* Add output parameter for "succeed" */
+            command.Parameters.Add(new MySqlParameter("@succeed", MySqlDbType.Bit));
+            command.Parameters["@succeed"].Direction = ParameterDirection.Output;
+
+            /* Execute the stored procedure. */
+            command.ExecuteNonQuery();
+
+            /* Get the value of "succeed" output parameter. */
+            UInt64 succeedValue = (UInt64)command.Parameters["@succeed"].Value;
+            bool succeed = Convert.ToBoolean(succeedValue);
+
+            return succeed;
+
+        }
+
+        public MySqlDataReader ExecuteSelectProcedure(string procedureName, Dictionary<string, Object>? parameters)
+        {
+            if (parameters == null)
+            {
+                return ExecuteSqlCode($"CALL {procedureName}();");
+            }
+            MySqlCommand command = new MySqlCommand(procedureName, connection);
+            command.CommandType = CommandType.StoredProcedure;
+
+            /* Set the parameter values. */
+            foreach (var item in parameters)
+            {
+                command.Parameters.AddWithValue($"@{item.Key}", item.Value);
+            }
+
+            return command.ExecuteReader();
+        }
     }
 }
 
