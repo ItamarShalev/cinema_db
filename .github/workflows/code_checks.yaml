@@ -6,6 +6,9 @@ on:
   push:
     branches: [ main, dev ]
 
+env:
+  TEST_SLN: "cinema_db.sln"
+
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -20,17 +23,17 @@ jobs:
         dotnet-version: 7.0.x
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore $TEST_SLN
 
     - name: Build
-      run: dotnet build --no-restore /nowarn:MSB3246
+      run: dotnet build --no-restore /nowarn:MSB3246 $TEST_SLN
 
     - name: Write secret MySQL login details to file
       run: echo ${{ secrets.MYSQL_LOGIN_DETAILS }} >> secret_mysql_login.txt
 
     - name: Test
       if: ${{ false }}
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal $TEST_SLN
 
   Lint_Csharp:
     runs-on: ubuntu-latest
@@ -45,7 +48,7 @@ jobs:
       run: dotnet tool install -g roslynator.dotnet.cli
 
     - name: Run Roslynator analyzer
-      run: roslynator analyze -v detailed
+      run: roslynator analyze -v detailed $TEST_SLN
 
   Lint_SQL:
     runs-on: ubuntu-latest
