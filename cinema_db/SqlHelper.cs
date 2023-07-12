@@ -11,13 +11,12 @@ namespace cinemaDB
         private MySqlConnection? connection;
         private const string secret_file_name = "secret_mysql_login.txt";
 
-        public static string GetConnectionFromSecretFile()
+        public static string GetConnectionFromSecretFile(string? databaseName)
         {
-            string connectionString = "";
-            string[] lines;
+            string[]? lines = null;
 
             /* Read the server details using Github secrets */
-            string fullSecretFileLocation = FileFinder.FindFile(FileFinder.FindSlnDirectoryLocation(), secret_file_name);
+            string fullSecretFileLocation = FileFinder.FindFile(FileFinder.FindSqlParentDirectoryLocation(), secret_file_name);
             if (string.IsNullOrEmpty(fullSecretFileLocation))
             {
                 Console.WriteLine(secret_file_name + " file is missing.");
@@ -28,20 +27,19 @@ namespace cinemaDB
             using (var streamReader = File.OpenText(fullSecretFileLocation))
             {
                 lines = streamReader.ReadToEnd().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (lines == null || lines.Length != 3)
-                {
-                    Console.WriteLine("The file should contain the user name and the password.");
-                    Console.WriteLine("The pattern is: '<ip>,<user_name>,<password>' for example: 0.0.0.0,admin,admin123.");
-                    return "";
-                }
             }
-            connectionString = SqlHelper.GetMySqlConnectionString(host: lines[0], username: lines[1], password: lines[2]);
-            return connectionString;
+            if (lines == null || lines.Length != 3)
+            {
+                throw new FormatException("The secret file should contain the user name and the password, separated by commas. " +
+                                          "The pattern is: '<ip>,<user_name>,<password>' for example: 0.0.0.0,admin,admin123.");
+            }
+            return GetMySqlConnectionString(host: lines![0], username: lines![1], password: lines![2], databaseName);
         }
 
-        public static string GetMySqlConnectionString(string host, string username, string password)
+        public static string GetMySqlConnectionString(string host, string username, string password, string? databaseName)
         {
-            string connectionString = $"server={host};user={username};password={password};";
+            string databaseString = string.IsNullOrEmpty(databaseName) ? string.Empty : $"database={databaseName};";
+            string connectionString = $"server={host};user={username};{databaseString}password={password};";
             return connectionString;
         }
 
@@ -59,6 +57,18 @@ namespace cinemaDB
                 connection.Dispose();
                 connection = null;
             }
+        }
+
+        public void InitDatabaseAndLoadSqlFiles()
+        {
+            var reader = ExecuteSqlCode("DROP DATABASE IF EXISTS db_cinema;");
+            reader.Close();
+            ExecuteSqlFile("scheme.sql");
+            ExecuteSqlFile("views.sql");
+            ExecuteSqlFile("data.sql");
+            ExecuteSqlFile("additional_data.sql");
+            ExecuteSqlFile("procedures.sql");
+            ExecuteSqlFile("functions.sql");
         }
 
         public bool ExecuteFunctionTest(string functionName)

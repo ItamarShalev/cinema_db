@@ -2,27 +2,34 @@
 {
     public static class FileFinder
     {
-        public static readonly string sqlDirectory = Path.Combine(FindSlnDirectoryLocation(), "sql");
+        public static readonly string sqlDirectory = FindSqlDirectoryLocation();
 
-        public static string FindSlnDirectoryLocation()
+        public static string FindSqlParentDirectoryLocation()
+        {
+            var parentDirectory = Directory.GetParent(sqlDirectory);
+            return parentDirectory == null ? "": parentDirectory.FullName;
+        }
+
+        public static string FindSqlDirectoryLocation()
         {
             string? currentDirectory = Directory.GetCurrentDirectory();
-            string? solutionDirectory = null;
+            string directoryResult = "";
+
             while (currentDirectory != null)
             {
-                string[] solutionFiles = Directory.GetFiles(currentDirectory, "*.sln");
-                if (solutionFiles.Length > 0)
+                string[] directories = Directory.GetDirectories(currentDirectory, "sql");
+                if (directories.Length == 1)
                 {
-                    solutionDirectory = Path.GetDirectoryName(solutionFiles[0]);
+                    directoryResult = directories[0];
                     break;
                 }
                 currentDirectory = Directory.GetParent(currentDirectory)?.FullName;
             }
-            if (solutionDirectory == null)
+            if (string.IsNullOrEmpty(directoryResult))
             {
-                throw new DirectoryNotFoundException("Directory of sln file doesn't found.");
+                throw new DirectoryNotFoundException("Directory of sql files doesn't found.");
             }
-            return solutionDirectory;
+            return directoryResult;
         }
 
         public static string FindSqlFile(string sqlFile)

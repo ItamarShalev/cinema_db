@@ -14,17 +14,10 @@ namespace cinemaDB
         [TestInitialize]
         public void SetUp()
         {
-            string connectionString = SqlHelper.GetConnectionFromSecretFile();
+            string connectionString = SqlHelper.GetConnectionFromSecretFile(null);
             Assert.IsFalse(string.IsNullOrEmpty(connectionString), "Missing secret file or incorrect pattern, check the logs.");
             sqlHelper.OpenDatabaseConnection(connectionString);
-            var reader = sqlHelper.ExecuteSqlCode("DROP DATABASE IF EXISTS db_cinema;");
-            reader.Close();
-            sqlHelper.ExecuteSqlFile("scheme.sql");
-            sqlHelper.ExecuteSqlFile("views.sql");
-            sqlHelper.ExecuteSqlFile("data.sql");
-            sqlHelper.ExecuteSqlFile("additional_data.sql");
-            sqlHelper.ExecuteSqlFile("procedures.sql");
-            sqlHelper.ExecuteSqlFile("functions.sql");
+            sqlHelper.InitDatabaseAndLoadSqlFiles();
             sqlHelper.ExecuteSqlFile("test_procedures.sql");
             sqlHelper.ExecuteSqlFile("test_functions.sql");
         }
